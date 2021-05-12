@@ -18,14 +18,8 @@ var capas = [];
 var capaSeleccionada;
 var todasCapasSeleccionadas;
 
-var peer;
-
 var MAX_TRAZOS = 100;
 var MAX_TOQUES = 1000;
-
-var ownID = "";
-var showingID = false;
-var peer_id = "";
 
 function setup() {
   let w = 0, h = 0;
@@ -60,51 +54,36 @@ function setup() {
   registrandoTrazo = false;
   mostrarTextoDeEstado = true; 
 
-  
-  peer = new Peer(); 
-  peer.on('open', function(id) {
-    ownID = id;
-    console.log('My peer ID is: ' + id);
-  });
-
-  // peer.on('connection', function(conn) {
-  //   conn.on('data', function(data) {
-  //     print("received", data);
-  //   });
-  // });
+  iniciarP2P();
 }
 
 function draw() {  
   lienzo.pintar();
   pintarCapas();  
-  if (mostrarTextoDeEstado) escribirTextoDeEstado();
+  if (mostrarTextoDeEstado && !leyendoID && !mostrandoID) escribirTextoDeEstado();
 }
 
 function mousePressed() {
+  if (leyendoID || mostrandoID) return
   if (!registrandoTrazo) {
     registrandoTrazo = true;
     nuevoTrazo = new Trazo(capaSeleccionada, pinceles[capaSeleccionada.pincel].nuevoPincel(), tintasPincel[capaSeleccionada.tinta], capaSeleccionada.repetirTrazos, millis());
   }
   nuevoTrazo.agregarUnToque(crearToque(true));
-
-  // if (peer_id != "") {
-  //   print("will send message hi to peer");
-  //   var conn = peer.connect(peer_id);
-  //   // on open will be launch when you successfully connect to PeerServer
-  //   conn.on('open', function() {
-  //     // here you have conn.id      
-  //     conn.send('hi!');
-  //   });
-  // }  
 }
 
 function mouseDragged() {
+  if (leyendoID || mostrandoID) return
   if (registrandoTrazo) {
     nuevoTrazo.agregarUnToque(crearToque(false));
+    if (conectado) {
+      enviarData();
+    }
   }  
 }
 
 function mouseReleased() {
+  if (leyendoID || mostrandoID) return  
   if (registrandoTrazo) {
     if (capaSeleccionada.unirTrazos) {
       nuevoTrazo.toquePrevioEsUltimo();
@@ -146,23 +125,10 @@ function keyPressed() {
     todasCapasSeleccionadas = true;
   } else if (keyCode === ENTER || keyCode === RETURN) {
     mostrarTextoDeEstado = !mostrarTextoDeEstado;
-  } else if (key === ';') {
-    input = createInput();
-    input.position(20, 65);
-    input.size(120, 20);
-    button = createButton('connect');
-    button.position(150, 65);
-    button.size(80, 28);
-    button.mousePressed(greet);
-  } else if (key === '/') {
-    showingID = !showingID;
-    if (showingID) {
-      div = createDiv(ownID);
-      div.position(20, 65);
-      div.size(500, 20);    
-    } else {
-      removeElements();
-    }    
+  } else if (listaContieneTecla(teclasMostrarID)) {
+    mostrarID();
+  } else if (listaContieneTecla(teclasPedirID)) {
+    leerID();
   }
   lienzo.procesarTeclado();
   for (const capa of capas) {
@@ -171,14 +137,6 @@ function keyPressed() {
     }
   }  
 }
-
-function greet() {
-  const id = input.value();
-  print(id);
-  input = null;
-  removeElements();
-}
-
 
 function modificador() {
   let mod = -1;
@@ -192,7 +150,8 @@ function modificador() {
 
 function escribirTextoDeEstado() {  
   let texto = "";
-  texto = "C" + capaSeleccionada.indice;
+  if (conectado) texto = "@";
+  texto += "C" + capaSeleccionada.indice;
   if (todasCapasSeleccionadas) texto += "!";
   texto += ":" + pinceles[capaSeleccionada.pincel].nombre;
   texto += ":f" + lienzo.tintaActual.nombre;
@@ -202,7 +161,7 @@ function escribirTextoDeEstado() {
   texto += ":R" + int(capaSeleccionada.repetirTrazos);
   texto += ":U" + int(capaSeleccionada.unirTrazos);
   texto += ":O" + capaSeleccionada.nivelOpacidadSeleccionado;
-  texto += ":E" + capaSeleccionada.nivelEscalaSeleccionado;
+  texto += ":E" + capaSeleccionada.nivelEscalaSeleccionado;  
   noStroke();
   fill(lienzo.tintaActual.generarColorComplementario());
   text(texto, 0, 0, width, 20);
