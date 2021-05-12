@@ -28,16 +28,16 @@ var Trazo = function(capa, pincel, tinta, rep, t) {
   this.repetir = rep;
   this.cerrado = false;
   this.borrando = false;
-  this.borrado = false; 
+  this.borrado = false;
 }
 
 Trazo.prototype = {
 
-  cerrate: function(unico) {
+  cerrate: function(unico) {    
     this.cerrado = true;
     this.duracionBorrado = tiemposBorradoTrazo[this.capa.tiemposBorradoSeleccionado];
     let ultimoToque = this.toques[this.toques.length - 1];
-    let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, 0, ultimoToque.t + this.duracionBorrado);
+    let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.t + this.duracionBorrado, ultimoToque.p);
     this.tiempoBorrado = ultimoToque.t;
     this.agregarUnToque(fakeToque);
     ultimoToque.ultimo = true;
@@ -50,10 +50,8 @@ Trazo.prototype = {
     let indice = this.toques.length - 1;
     let factorBorrado = 1;
     if (this.cerrado && (this.repetir || this.borrando)) {
-      
-      let t = (millis() - this.tiempoComienzo) % (this.tiempoFinal - this.tiempoComienzo + 1);
+      let t = int(millis() - this.tiempoComienzo) % int(this.tiempoFinal - this.tiempoComienzo + 1);
       let indiceCorriente = this.buscarIndice(t);
-      // print(this.toques.length, t, indiceCorriente);
 
       if (this.repetir) {
         // Transformar tiempo absoluto (millis) en tiempo relativo al trazo:        
@@ -61,7 +59,7 @@ Trazo.prototype = {
       }
       
       if (this.tiempoBorrado - this.tiempoComienzo <= t) {
-        this.factorBorrado = 1 - (t - this.tiempoBorrado + this.tiempoComienzo) / this.duracionBorrado;
+        factorBorrado = 1 - float(t - this.tiempoBorrado + this.tiempoComienzo) / this.duracionBorrado;
       }
       
       if (this.borrando && (indiceCorriente < this.indicePrevio || factorBorrado < 0.01)) {
@@ -120,24 +118,6 @@ Trazo.prototype = {
     }
     return idx;
   } 
-
-  // buscarIndice: function(tiempo) {
-  //   if (0 < this.toques.length) {
-  //     let n = this.toques.length - 1;
-  //     let t = tiempo
-  //     let i = 0;
-  //     for (i = 0; i < n - 1; i++) {
-  //       // print(i, this.toques[i].t - this.tiempoComienzo, this.toques[i + 1].t - this.tiempoComienzo)
-  //       if (this.toques[i].t - this.tiempoComienzo <= t && t < this.toques[i + 1].t - this.tiempoComienzo) {          
-  //         break;
-  //       }
-  //     }
-      
-  //     return i;
-  //   } else {
-  //     return this.toques.length - 1;
-  //   }    
-  // }
 }
 
 var Toque = function(x, y, t, p) {

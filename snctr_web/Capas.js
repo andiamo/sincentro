@@ -4,6 +4,8 @@ var teclasAumentarTiempoBorrado  = ['+', '='];
 var teclasDisminuirTiempoTransicionFondo = ['<', ','];
 var teclasAumentarTiempoTransicionFondo  = ['>', '.'];
 
+var teclasUnirTrazos = ['~', '`']
+
 function crearCapas() {
   for (let i = 0; i < 9; i++) {
     capas.push(new CapaDibujo(i + 1));
@@ -21,19 +23,11 @@ function pintarCapas() {
   }
 }
 
-var CapaBase = function() { }
-
-CapaBase.prototype = {
-  pintar: function() {},
-
-  procesarTeclado: function() {},
-
-  listaContieneTecla: function(teclas) {
-    for (let tcl of teclas) {
-      if (tcl == key) return true;
-    }
-    return false;
+function listaContieneTecla(teclas) {
+  for (let tcl of teclas) {
+    if (tcl == key) return true;
   }
+  return false;
 }
 
 var LienzoFondo = function(tinta) {
@@ -44,12 +38,6 @@ var LienzoFondo = function(tinta) {
   this.duracionCambio = 0;
   this.tiempoTransicionSeleccionado = 4;
 }
-
-LienzoFondo.prototype = Object.create(CapaBase.prototype);
-Object.defineProperty(LienzoFondo.prototype, 'constructor', { 
-  value: LienzoFondo, 
-  enumerable: false, // so that it does not appear in 'for in' loop
-  writable: true });
 
 LienzoFondo.prototype = {
   
@@ -78,13 +66,13 @@ LienzoFondo.prototype = {
   },
   
   procesarTeclado: function() {
-    if (this.listaContieneTecla(teclasDisminuirTiempoTransicionFondo)) {
+    if (listaContieneTecla(teclasDisminuirTiempoTransicionFondo)) {
       this.tiempoTransicionSeleccionado = constrain(this.tiempoTransicionSeleccionado - 1, 0, 9);
-    } else if (this.listaContieneTecla(teclasAumentarTiempoTransicionFondo)) {
+    } else if (listaContieneTecla(teclasAumentarTiempoTransicionFondo)) {
       this.tiempoTransicionSeleccionado = constrain(this.tiempoTransicionSeleccionado + 1, 0, 9);  
     } else {
       for (let t of tintasFondo) {
-        if (this.listaContieneTecla(t.teclas)) {
+        if (listaContieneTecla(t.teclas)) {
           this.cambiarColor(t);
         }
       }
@@ -110,12 +98,6 @@ var CapaDibujo = function(indice) {
   this.repetirTrazos = true;
 }
 
-CapaDibujo.prototype = Object.create(CapaBase.prototype);
-Object.defineProperty(CapaDibujo.prototype, 'constructor', { 
-  value: CapaDibujo, 
-  enumerable: false, // so that it does not appear in 'for in' loop
-  writable: true });
-
 CapaDibujo.prototype = {  
   
   pintar: function() {
@@ -123,11 +105,15 @@ CapaDibujo.prototype = {
     this.factorEscala.actualizar();
     
     let paraRemover = [];
-    for (let trazo of this.trazos) {
+    for (let i = 0; i < this.trazos.length; i++) {
+      let trazo = this.trazos[i];
       trazo.dibujate();
-      if (trazo.borrado) paraRemover.push(indexOf(trazos, trazo));
+      if (trazo.borrado) paraRemover.push(i);
     }
-    removeAll(this.trazos, paraRemover);
+    for (let i = 0; i < paraRemover.length; i++) {
+      let idx = paraRemover[i];
+      this.trazos.splice(idx, 1);
+    }
   },
   
   borrarTrazos: function() {
@@ -149,11 +135,12 @@ CapaDibujo.prototype = {
     } else if (keyCode === UP_ARROW) {
       this.nivelEscalaSeleccionado = constrain(this.nivelEscalaSeleccionado + 1, 0, 9);
       this.factorEscala.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
+    } else if (keyCode == DELETE || keyCode == BACKSPACE) {
+      this.borrarTrazos();
+      print("DEL");      
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
-    } else if (key == DELETE || key == BACKSPACE) {
-      this.borrarTrazos();
-    } else if (key == TAB) {
+    } else if (listaContieneTecla(teclasUnirTrazos)) {
       this.unirTrazos = !this.unirTrazos;      
     } else if (listaContieneTecla(teclasDisminuirTiempoBorrado)) {
       this.tiemposBorradoSeleccionado = constrain(this.tiemposBorradoSeleccionado - 1, 0, 9);
@@ -161,12 +148,12 @@ CapaDibujo.prototype = {
       this.tiemposBorradoSeleccionado = constrain(this.tiemposBorradoSeleccionado + 1, 0, 9);  
     } else {
       for (let p of pinceles) {
-        if (this.listaContieneTecla(p.teclas)) {
+        if (listaContieneTecla(p.teclas)) {
           this.pincel = p.indice;
         }
       }
       for (let t of tintasPincel) {
-        if (this.listaContieneTecla(t.teclas)) {
+        if (listaContieneTecla(t.teclas)) {
           this.tinta = t.indice;
         }
       }

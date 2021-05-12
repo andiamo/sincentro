@@ -44,7 +44,7 @@ function setup() {
     h = document.body.clientHeight;
   }
   canvas = createCanvas(w, h);
-  canvas.parent('andiamo'); 
+  canvas.parent('sincentro'); 
   
   cargarPinceles();  
   cargarColores();  
@@ -59,16 +59,16 @@ function setup() {
   mostrarTextoDeEstado = true; 
 
   // https://peerjs.com/
-  peer = new Peer(); 
-  peer.on('open', function(id) {
-    console.log('My peer ID is: ' + id);
-  });
+  // peer = new Peer(); 
+  // peer.on('open', function(id) {
+  //   console.log('My peer ID is: ' + id);
+  // });
 
-  peer.on('connection', function(conn) {
-    conn.on('data', function(data) {
-      print("received", data);
-    });
-  });
+  // peer.on('connection', function(conn) {
+  //   conn.on('data', function(data) {
+  //     print("received", data);
+  //   });
+  // });
 }
 
 function draw() {  
@@ -84,15 +84,15 @@ function mousePressed() {
   }
   nuevoTrazo.agregarUnToque(crearToque(true));
 
-  if (peer_id != "") {
-    print("will send message hi to peer");
-    var conn = peer.connect(peer_id);
-    // on open will be launch when you successfully connect to PeerServer
-    conn.on('open', function() {
-      // here you have conn.id      
-      conn.send('hi!');
-    });
-  }  
+  // if (peer_id != "") {
+  //   print("will send message hi to peer");
+  //   var conn = peer.connect(peer_id);
+  //   // on open will be launch when you successfully connect to PeerServer
+  //   conn.on('open', function() {
+  //     // here you have conn.id      
+  //     conn.send('hi!');
+  //   });
+  // }  
 }
 
 function mouseDragged() {
@@ -175,6 +175,7 @@ function escribirTextoDeEstado() {
   texto += ":U" + int(capaSeleccionada.unirTrazos);
   texto += ":O" + capaSeleccionada.nivelOpacidadSeleccionado;
   texto += ":E" + capaSeleccionada.nivelEscalaSeleccionado;
-  fill(lienzo.tintaActual.generarColorComplementario());  
+  noStroke();
+  fill(lienzo.tintaActual.generarColorComplementario());
   text(texto, 0, 0, width, 20);
 }
