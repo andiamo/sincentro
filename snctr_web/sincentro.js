@@ -139,8 +139,8 @@ function keyPressed() {
   } else if (key == '9') {
     capaSeleccionada = capas[8];
     todasCapasSeleccionadas = false;
-  } else if (key == '0') {      
-    todasCapasSeleccionadas = true;   
+  } else if (key == '0') {
+    todasCapasSeleccionadas = true;
   } else if (keyCode == ENTER || keyCode == RETURN) {
     mostrarTextoDeEstado = !mostrarTextoDeEstado;
   }
@@ -170,7 +170,7 @@ function escribirTextoDeEstado() {
   texto += ":f" + lienzo.tintaActual.nombre;
   texto += ":f" + lienzo.tiempoTransicionSeleccionado;
   texto += ":p" + tintasPincel[capaSeleccionada.tinta].nombre;
-  texto += ":p" + capaSeleccionada.tiemposBorradoSeleccionado;  
+  texto += ":p" + capaSeleccionada.tiemposBorradoSeleccionado;
   texto += ":R" + int(capaSeleccionada.repetirTrazos);
   texto += ":U" + int(capaSeleccionada.unirTrazos);
   texto += ":O" + capaSeleccionada.nivelOpacidadSeleccionado;

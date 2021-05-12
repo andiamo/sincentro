@@ -12,7 +12,7 @@ function cerrarTrazo(capa, unico) {
   registrandoTrazo = false;
 }
 
-var Trazo = function(capa, pincel, tinta, rep, t) {        
+var Trazo = function(capa, pincel, tinta, rep, t) {
   this.capa = capa;
   this.pincel = pincel;
   this.tinta = tinta;
@@ -33,7 +33,7 @@ var Trazo = function(capa, pincel, tinta, rep, t) {
 
 Trazo.prototype = {
 
-  cerrate: function(unico) {    
+  cerrate: function(unico) {
     this.cerrado = true;
     this.duracionBorrado = tiemposBorradoTrazo[this.capa.tiemposBorradoSeleccionado];
     let ultimoToque = this.toques[this.toques.length - 1];
@@ -54,7 +54,7 @@ Trazo.prototype = {
       let indiceCorriente = this.buscarIndice(t);
 
       if (this.repetir) {
-        // Transformar tiempo absoluto (millis) en tiempo relativo al trazo:        
+        // Transformar tiempo absoluto (millis) en tiempo relativo al trazo:
         indice = indiceCorriente;
       }
       
@@ -68,7 +68,7 @@ Trazo.prototype = {
         return;
       }
       
-      this.indicePrevio = indiceCorriente;      
+      this.indicePrevio = indiceCorriente;
     }
 
     let opacidad = constrain(this.capa.factorOpacidad.valor * factorBorrado * 255, 1, 255);    
@@ -131,7 +131,7 @@ var Toque = function(x, y, t, p) {
 
 Toque.prototype = {
   distinto: function(otro) {
-    if (otro == null) return false;    
+    if (otro == null) return false;
     return otro.x != this.x || otro.y != this.y;
   }
 }

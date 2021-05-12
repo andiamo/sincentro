@@ -47,7 +47,7 @@ LienzoFondo.prototype = {
       let t = millis();
       if (t - this.tiempoCambio < this.duracionCambio) {
         let f = (t - this.tiempoCambio) / this.duracionCambio;      
-        colorFondo = this.tintaPrevia.interpolarHacia(this.tintaActual, f);        
+        colorFondo = this.tintaPrevia.interpolarHacia(this.tintaActual, f);
       } else {
         colorFondo = this.tintaActual.generarColor();
       }      
@@ -137,7 +137,6 @@ CapaDibujo.prototype = {
       this.factorEscala.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
     } else if (keyCode == DELETE || keyCode == BACKSPACE) {
       this.borrarTrazos();
-      print("DEL");      
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
     } else if (listaContieneTecla(teclasUnirTrazos)) {
