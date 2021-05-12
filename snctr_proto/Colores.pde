@@ -2,8 +2,8 @@ void cargarColores() {
   tintasFondo = new ArrayList<Tinta>();
   tintasPincel = new ArrayList<Tinta>();
   
-  tintasFondo.add(new Tinta(0, "BL", new char[]{'Z', 'z'}, 255, 255, 255));
-  tintasFondo.add(new Tinta(1, "NG", new char[]{'X', 'x'}, 0, 0, 0));  
+  tintasFondo.add(new Tinta(0, "BL", new char[]{'Z', 'z'}, #FFFFFF));
+  tintasFondo.add(new Tinta(1, "NG", new char[]{'X', 'x'}, #000000));  
     
   tintasPincel.add(new Tinta(0, "NG", new char[]{'A', 'a'}, #171717));
   tintasPincel.add(new Tinta(1, "BL", new char[]{'S', 's'}, #F7F7F7));
@@ -19,16 +19,6 @@ class Tinta {
   float rojo;
   float verde;
   float azul;
-  
-  Tinta(int indice, String name, char[] teclas, float r, float v, float a) {
-    this.indice = indice;
-    this.nombre = name;
-    this.teclas = teclas;
-    
-    rojo = r;
-    verde = v;
-    azul = a;    
-  }
   
   Tinta(int indice, String name, char[] teclas, color c) {
     this.indice = indice;

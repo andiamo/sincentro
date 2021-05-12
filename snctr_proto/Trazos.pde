@@ -49,7 +49,7 @@ class Trazo {
     cerrado = true;
     duracionBorrado = tiemposBorradoTrazo[capa.tiemposBorradoSeleccionado];
     Toque ultimoToque = toques.get(toques.size() - 1);  
-    Toque fakeToque = new Toque(ultimoToque.x, ultimoToque.y, 0, ultimoToque.t + duracionBorrado);
+    Toque fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + duracionBorrado);
     tiempoBorrado = ultimoToque.t;
     agregarUnToque(fakeToque);
     ultimoToque.ultimo = true;
@@ -84,9 +84,9 @@ class Trazo {
     }
 
     List<Toque> list = toques.subList(0, indice + 1);
-    atoques = list.toArray(atoques);    
+    atoques = list.toArray(new Toque[indice + 1]);
     float opacidad = constrain(capa.factorOpacidad.valor * factorBorrado * 255, 1, 255);
-    pincel.pintar(atoques, indice + 1, tinta.generarColor(opacidad), capa.factorEscala.valor);
+    pincel.pintar(atoques, tinta.generarColor(opacidad), capa.factorEscala.valor);
   }
   
   void borrate() {
@@ -142,15 +142,6 @@ class Toque {
   boolean primero;
   boolean ultimo;
   
-  Toque(int x, int y, int t) {
-    this.x = x;
-    this.y = y;    
-    this.t = t;
-    this.p = 0;
-    primero = false;
-    ultimo = false;
-  }
-
   Toque(int x, int y, float p, int t) {
     this.x = x;
     this.y = y;
@@ -158,10 +149,5 @@ class Toque {
     this.p = p;
     primero = false;
     ultimo = false;    
-  }
-  
-  boolean distinto(Toque otro) {
-    if (otro == null) return false;    
-    return otro.x != x || otro.y != y;    
-  }
+  }  
 }

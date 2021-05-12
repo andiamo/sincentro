@@ -9,6 +9,11 @@ void cargarPinceles() {
   pinceles.add(new PincelAnimado(3, "ANI", new char[]{'R', 'r'}));
 }
 
+boolean distintos(Toque ptoque, Toque toque) {
+  if (ptoque == null) return false;
+  return ptoque.x != toque.x || ptoque.y != toque.y;  
+}
+
 abstract class Pincel {
   String nombre;
   char[] teclas;
@@ -22,7 +27,7 @@ abstract class Pincel {
   
   abstract Pincel nuevoPincel();
   
-  abstract void pintar(Toque[] toques, int cantidad, color tinta, float escala);
+  abstract void pintar(Toque[] toques, color tinta, float escala);
 }
   
 class PincelLinea extends Pincel  {
@@ -34,13 +39,12 @@ class PincelLinea extends Pincel  {
     return new PincelLinea(indice, nombre, teclas);
   }
   
-  void pintar(Toque[] toques, int cantidad, color tinta, float escala) {
+  void pintar(Toque[] toques, color tinta, float escala) {
     stroke(tinta);
     strokeWeight(escala);
     Toque ptoque = null;
-    for (Toque toque: toques) {
-      if (toque == null) return;
-      if (toque.distinto(ptoque) && !toque.primero) {        
+    for (Toque toque: toques) {      
+      if (distintos(ptoque, toque) && !toque.primero) {        
         line(ptoque.x, ptoque.y, toque.x, toque.y);      
       }
       ptoque = toque;
@@ -57,18 +61,18 @@ class PincelCinta extends Pincel  {
     return new PincelCinta(indice, nombre, teclas);
   }  
   
-  void pintar(Toque[] toques, int cantidad, color tinta, float escala) {
+  void pintar(Toque[] toques, color tinta, float escala) {
     noStroke();
     fill(tinta);
     float w = 0;
     Toque ptoque = null;
-    for (int i = 0; i < cantidad; i++) {
+    for (int i = 0; i < toques.length; i++) {
       Toque toque = toques[i];
       if (toque.primero) {
         if (ptoque != null) endShape();        
         beginShape(QUAD_STRIP);
         w = 0;
-      } else if (toque.distinto(ptoque)) {                
+      } else if (distintos(ptoque, toque)) {                
         float dx = toque.x - ptoque.x;
         float dy = toque.y - ptoque.y;
         float d2 = sqrt(sq(dx) + sq(dy));
@@ -97,20 +101,20 @@ class PincelBola extends Pincel  {
     return new PincelBola(indice, nombre, teclas);
   }    
   
-  void pintar(Toque[] toques, int cantidad, color tinta, float escala) {
-    if (1 < cantidad) {
+  void pintar(Toque[] toques, color tinta, float escala) {
+    if (1 < toques.length) {
       strokeCap(ROUND);
-      Toque toque = toques[cantidad - 1];
-      Toque ptoque = toques[cantidad - 2];
+      Toque toque = toques[toques.length - 1];
+      Toque ptoque = toques[toques.length - 2];
       float r = 2 * toque.p * escala;
       stroke(tinta);
       noFill();      
       strokeWeight(r);
       line(ptoque.x, ptoque.y, toque.x, toque.y);
-    } else if (cantidad == 1) {
+    } else if (toques.length == 1) {
       noStroke();
       fill(tinta);      
-      Toque toque = toques[cantidad - 1];
+      Toque toque = toques[toques.length - 1];
       float r = 5 * escala;
       ellipse(toque.x, toque.y, r, r);
    }
@@ -129,11 +133,11 @@ class PincelAnimado extends Pincel  {
     return new PincelAnimado(indice, nombre, teclas);
   }    
   
-  void pintar(Toque[] toques, int cantidad, color tinta, float escala) {
-    if (0 < cantidad) {
+  void pintar(Toque[] toques, color tinta, float escala) {
+    if (0 < toques.length) {
       noStroke();
       fill(tinta);      
-      Toque toque = toques[cantidad - 1];
+      Toque toque = toques[toques.length - 1];
       float r = 20 * escala * noise(offset + millis() / 2500.0);
       ellipse(toque.x, toque.y, r, r);
    }

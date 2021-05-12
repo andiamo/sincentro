@@ -1,6 +1,6 @@
 function crearToque(primero) {
   let p = sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY));
-  let toque = new Toque(mouseX, mouseY, millis(), p);
+  let toque = new Toque(mouseX, mouseY, p, millis());
   toque.primero = primero;
   return toque;
 }
@@ -37,7 +37,7 @@ Trazo.prototype = {
     this.cerrado = true;
     this.duracionBorrado = tiemposBorradoTrazo[this.capa.tiemposBorradoSeleccionado];
     let ultimoToque = this.toques[this.toques.length - 1];
-    let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.t + this.duracionBorrado, ultimoToque.p);
+    let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + this.duracionBorrado);
     this.tiempoBorrado = ultimoToque.t;
     this.agregarUnToque(fakeToque);
     ultimoToque.ultimo = true;
@@ -120,18 +120,11 @@ Trazo.prototype = {
   } 
 }
 
-var Toque = function(x, y, t, p) {
+var Toque = function(x, y, p, t) {
   this.x = x;
   this.y = y;    
   this.t = t;
   this.p = p;
   this.primero = false;
   this.ultimo = false;  
-}
-
-Toque.prototype = {
-  distinto: function(otro) {
-    if (otro === null) return false;
-    return otro.x != this.x || otro.y != this.y;
-  }
 }

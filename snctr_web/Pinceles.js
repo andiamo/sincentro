@@ -9,6 +9,11 @@ function cargarPinceles() {
   pinceles.push(new PincelAnimado(3, "ANI", ['R', 'r']));
 }
 
+function distintos(ptoque, toque) {
+  if (ptoque === null) return false;
+  return ptoque.x !== toque.x || ptoque.y !== toque.y;
+}
+
 var PincelLinea = function(indice, nombre, teclas) { 
   this.indice = indice;
   this.nombre = nombre;
@@ -25,8 +30,7 @@ PincelLinea.prototype = {
     strokeWeight(escala);
     let ptoque = null;
     for (let toque of toques) {
-      if (toque === null) return;
-      if (toque.distinto(ptoque) && !toque.primero) {        
+      if (distintos(ptoque, toque) && !toque.primero) {        
         line(ptoque.x, ptoque.y, toque.x, toque.y);      
       }
       ptoque = toque;
@@ -53,10 +57,10 @@ PincelCinta.prototype = {
     for (let i = 0; i < toques.length; i++) {
       let toque = toques[i];
       if (toque.primero) {
-        if (ptoque != null) endShape();        
+        if (ptoque !== null) endShape();        
         beginShape(QUAD_STRIP);
         w = 0;
-      } else if (toque.distinto(ptoque)) {                
+      } else if (distintos(ptoque, toque)) { 
         let dx = toque.x - ptoque.x;
         let dy = toque.y - ptoque.y;
         let d2 = sqrt(sq(dx) + sq(dy));
