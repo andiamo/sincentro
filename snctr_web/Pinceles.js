@@ -25,7 +25,7 @@ PincelLinea.prototype = {
     strokeWeight(escala);
     let ptoque = null;
     for (let toque of toques) {
-      if (toque == null) return;
+      if (toque === null) return;
       if (toque.distinto(ptoque) && !toque.primero) {        
         line(ptoque.x, ptoque.y, toque.x, toque.y);      
       }
@@ -97,7 +97,7 @@ PincelBola.prototype = {
       noFill();      
       strokeWeight(r);
       line(ptoque.x, ptoque.y, toque.x, toque.y);
-    } else if (toques.length == 1) {
+    } else if (toques.length === 1) {
       noStroke();
       fill(tinta);      
       let toque = toques[toques.length - 1];

@@ -6,7 +6,7 @@ function crearToque(primero) {
 }
 
 function cerrarTrazo(capa, unico) {  
-  if (capa.trazos.length == MAX_TRAZOS) capa.trazos.shift(); 
+  if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift(); 
   nuevoTrazo.cerrate(unico);
   capa.trazos.push(nuevoTrazo);
   registrandoTrazo = false;
@@ -80,7 +80,7 @@ Trazo.prototype = {
   },
   
   agregarUnToque: function(toque) {
-    if (this.toques.length == MAX_TOQUES) this.toques.shift();
+    if (this.toques.length === MAX_TOQUES) this.toques.shift();
     this.toques.push(toque);
     this.tiempoFinal = toque.t;
   },
@@ -131,7 +131,7 @@ var Toque = function(x, y, t, p) {
 
 Toque.prototype = {
   distinto: function(otro) {
-    if (otro == null) return false;
+    if (otro === null) return false;
     return otro.x != this.x || otro.y != this.y;
   }
 }

@@ -17,7 +17,7 @@ function pintarCapas() {
   for (let i = capas.length - 1; i >= 0; i--) {
     let capa = capas[i];
     capa.pintar();
-    if (capa == capaSeleccionada & registrandoTrazo) {
+    if (capa === capaSeleccionada & registrandoTrazo) {
       nuevoTrazo.dibujate();
     }
   }
@@ -25,7 +25,7 @@ function pintarCapas() {
 
 function listaContieneTecla(teclas) {
   for (let tcl of teclas) {
-    if (tcl == key) return true;
+    if (tcl === key) return true;
   }
   return false;
 }
@@ -135,7 +135,7 @@ CapaDibujo.prototype = {
     } else if (keyCode === UP_ARROW) {
       this.nivelEscalaSeleccionado = constrain(this.nivelEscalaSeleccionado + 1, 0, 9);
       this.factorEscala.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
-    } else if (keyCode == DELETE || keyCode == BACKSPACE) {
+    } else if (keyCode === DELETE || keyCode === BACKSPACE) {
       this.borrarTrazos();
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;

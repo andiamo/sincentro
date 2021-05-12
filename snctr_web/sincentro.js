@@ -27,7 +27,7 @@ var peer_id = "";
 
 function setup() {
   let w = 0, h = 0;
-  if(typeof(window.innerWidth) == 'number') {
+  if(typeof(window.innerWidth) === 'number') {
     // Non-IE
     w = window.innerWidth;
     h = window.innerHeight;
@@ -58,11 +58,11 @@ function setup() {
   registrandoTrazo = false;
   mostrarTextoDeEstado = true; 
 
-  // https://peerjs.com/
-  // peer = new Peer(); 
-  // peer.on('open', function(id) {
-  //   console.log('My peer ID is: ' + id);
-  // });
+  
+  peer = new Peer(); 
+  peer.on('open', function(id) {
+    console.log('My peer ID is: ' + id);
+  });
 
   // peer.on('connection', function(conn) {
   //   conn.on('data', function(data) {
@@ -106,47 +106,47 @@ function mouseReleased() {
     if (capaSeleccionada.unirTrazos) {
       nuevoTrazo.toquePrevioEsUltimo();
     } else {
-      cerrarTrazo(capaSeleccionada, modificador() == SHIFT);
+      cerrarTrazo(capaSeleccionada, modificador() === SHIFT);
     }    
   }  
 }
 
 function keyPressed() {
-  if (key == '1') {
+  if (key === '1') {
     capaSeleccionada = capas[0];
     todasCapasSeleccionadas = false;
-  } else if (key == '2') {
+  } else if (key === '2') {
     capaSeleccionada = capas[1];
     todasCapasSeleccionadas = false;
-  } else if (key == '3') {
+  } else if (key === '3') {
     capaSeleccionada = capas[2];
     todasCapasSeleccionadas = false;
-  } else if (key == '4') {
+  } else if (key === '4') {
     capaSeleccionada = capas[3];
     todasCapasSeleccionadas = false;
-  } else if (key == '5') {
+  } else if (key === '5') {
     capaSeleccionada = capas[4];
     todasCapasSeleccionadas = false;
-  } else if (key == '6') {
+  } else if (key === '6') {
     capaSeleccionada = capas[5];
     todasCapasSeleccionadas = false;
-  } else if (key == '7') {
+  } else if (key === '7') {
     capaSeleccionada = capas[6];
     todasCapasSeleccionadas = false;
-  } else if (key == '8') {
+  } else if (key === '8') {
     capaSeleccionada = capas[7];
     todasCapasSeleccionadas = false;
-  } else if (key == '9') {
+  } else if (key === '9') {
     capaSeleccionada = capas[8];
     todasCapasSeleccionadas = false;
-  } else if (key == '0') {
+  } else if (key === '0') {
     todasCapasSeleccionadas = true;
-  } else if (keyCode == ENTER || keyCode == RETURN) {
+  } else if (keyCode === ENTER || keyCode === RETURN) {
     mostrarTextoDeEstado = !mostrarTextoDeEstado;
   }
   lienzo.procesarTeclado();
   for (const capa of capas) {
-  if (todasCapasSeleccionadas || capa == capaSeleccionada) {
+  if (todasCapasSeleccionadas || capa === capaSeleccionada) {
       capa.procesarTeclado();
     }
   }  
@@ -155,7 +155,7 @@ function keyPressed() {
 function modificador() {
   let mod = -1;
   if (keyPressed) {
-    if (keyCode == SHIFT) {
+    if (keyCode === SHIFT) {
       mod = SHIFT;
     }
   }
