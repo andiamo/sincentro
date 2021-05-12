@@ -23,6 +23,8 @@ var peer;
 var MAX_TRAZOS = 100;
 var MAX_TOQUES = 1000;
 
+var ownID = "";
+var showingID = false;
 var peer_id = "";
 
 function setup() {
@@ -61,6 +63,7 @@ function setup() {
   
   peer = new Peer(); 
   peer.on('open', function(id) {
+    ownID = id;
     console.log('My peer ID is: ' + id);
   });
 
@@ -143,6 +146,23 @@ function keyPressed() {
     todasCapasSeleccionadas = true;
   } else if (keyCode === ENTER || keyCode === RETURN) {
     mostrarTextoDeEstado = !mostrarTextoDeEstado;
+  } else if (key === ';') {
+    input = createInput();
+    input.position(20, 65);
+    input.size(120, 20);
+    button = createButton('connect');
+    button.position(150, 65);
+    button.size(80, 28);
+    button.mousePressed(greet);
+  } else if (key === '/') {
+    showingID = !showingID;
+    if (showingID) {
+      div = createDiv(ownID);
+      div.position(20, 65);
+      div.size(500, 20);    
+    } else {
+      removeElements();
+    }    
   }
   lienzo.procesarTeclado();
   for (const capa of capas) {
@@ -151,6 +171,14 @@ function keyPressed() {
     }
   }  
 }
+
+function greet() {
+  const id = input.value();
+  print(id);
+  input = null;
+  removeElements();
+}
+
 
 function modificador() {
   let mod = -1;
