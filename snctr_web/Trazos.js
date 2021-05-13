@@ -12,7 +12,9 @@ function cerrarTrazo(capa, unico) {
   registrandoTrazo = false;
 }
 
-var Trazo = function(capa, pincel, tinta, rep, t) {
+var Trazo = function(indice, peer, capa, pincel, tinta, rep, t) {
+  this.indice = indice;
+  this.peer = peer;
   this.capa = capa;
   this.pincel = pincel;
   this.tinta = tinta;

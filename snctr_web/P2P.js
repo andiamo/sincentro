@@ -29,10 +29,10 @@ function iniciarP2P() {
     });
   });
   peer.on('disconnected', function() {
-    print("Desconectado");
+    print("Desconectado del signalling server");
   });
   peer.on('error', function(err) {
-    print("Error", err);
+    print("Hubo un error", err);
   });
 }
 
@@ -63,22 +63,23 @@ function conectar(id, compartir = false, primera = false) {
     conn.on('open', function() {
       if (compartir) compartirViejosPeers(conn);
       otrosIDs.put(id, conn);
-      print("ADD peer", conn.peer, otrosIDs.size());
-      print(otrosIDs);
+      // print("ADD peer", conn.peer, otrosIDs.size());
+      // print(otrosIDs);
       if (primera) conn.send({tipo: "HOLA"});
     });
     conn.on('close', function() {
       otrosIDs.remove(conn.peer);
-      print("REMOVE peer", conn.peer, otrosIDs.size());
-      print(otrosIDs);
+      // print("REMOVE peer", conn.peer, otrosIDs.size());
+      // print(otrosIDs);
     });
-  } else {
-    print(id, "is already connected");
-  }
+  } 
+  // else {
+  //   print(id, "is already connected");
+  // }
 }
 
 function enviarData() {
-  print("Enviando data");
+  // print("Enviando data");
   for (let id of otrosIDs.keys()) {
     // otrosIDs.get(id).send({x : mouseX, y : mouseY});
     otrosIDs.get(id).send({tipo: "MENSAJE", msg : "helo"});
@@ -86,7 +87,7 @@ function enviarData() {
 }
 
 function compartirNuevoPeer(nuevoID) {
-  print("Compartiendo nuevo peer");
+  // print("Compartiendo nuevo peer");
   for (let id of otrosIDs.keys()) {
     // otrosIDs.get(id).send({x : mouseX, y : mouseY});
     otrosIDs.get(id).send({tipo: "NUEVO_PEER", id : nuevoID});
@@ -104,14 +105,16 @@ function recibirData(conn, data) {
   // le avisa a los peers que ya tiene que tambien lo registren.
   conectar(conn.peer, true);
 
-  if (data["tipo"] === "HOLA") {
-    print("HOLA", conn.peer);
-  } if (data["tipo"] === "NUEVO_PEER") {
+  // if (data["tipo"] === "HOLA") {
+    // print("HOLA", conn.peer);
+  /}
+
+  if (data["tipo"] === "NUEVO_PEER") {
     let id = data["id"]
     conectar(id);
-    print("Recibido NUEVO_PEER", id, "from", conn.peer);
+    // print("Recibido NUEVO_PEER", id, "from", conn.peer);
   } else if (data["tipo"] === "MENSAJE") {
     let msg = data["msg"]
-    print("Recibido MENSAJE", msg, "from", conn.peer);
+    // print("Recibido MENSAJE", msg, "from", conn.peer);
   }  
 }

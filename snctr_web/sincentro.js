@@ -2,6 +2,7 @@ var pinceles = [];
 var tintasFondo = [];
 var tintasPincel = [];
 var lienzo;
+var indiceTrazo = 0;
 
 var nuevoTrazo = null;
 var registrandoTrazo = false;
@@ -60,8 +61,9 @@ function mousePressed() {
   if (mostrandoID) return
   if (!registrandoTrazo) {
     let scapa = capas[capaSeleccionada];
-    registrandoTrazo = true;    
-    nuevoTrazo = new Trazo(scapa, pinceles[scapa.pincel].nuevoPincel(), tintasPincel[scapa.tinta], scapa.repetirTrazos, millis());
+    registrandoTrazo = true;
+    indiceTrazo++;    
+    nuevoTrazo = new Trazo(indiceTrazo, miID, scapa, pinceles[scapa.pincel].nuevoPincel(), tintasPincel[scapa.tinta], scapa.repetirTrazos, millis());
   }
   nuevoTrazo.agregarUnToque(crearToque(true));
 }
