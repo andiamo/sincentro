@@ -17,7 +17,7 @@ function pintarCapas() {
   for (let i = capas.length - 1; i >= 0; i--) {
     let capa = capas[i];
     capa.pintar();
-    if (capa === capaSeleccionada & registrandoTrazo) {
+    if (capa === capaSeleccionada && registrandoTrazo) {
       nuevoTrazo.dibujate();
     }
   }

@@ -50,6 +50,8 @@ function mostrarID() {
 function leerID() {
   let entrada = window.prompt('Ingresar el codigo del peer');
   if (entrada) {
+    // Este peer intenta conectarse a otro peer usando el id ingresado por el usuario,
+    // ademas le enviara un mensaje de HOLA para generar el registro inverso.
     conectar(entrada, false, true);
   }
 }
@@ -99,7 +101,7 @@ function compartirViejosPeers(conn) {
 
 function recibirData(conn, data) {
   // Este peer recibe un mensaje de datos de otro peer, ademas de registrarlo, 
-  // le avisa a los peers que ya tienen que tambien lo registren.
+  // le avisa a los peers que ya tiene que tambien lo registren.
   conectar(conn.peer, true);
 
   if (data["tipo"] === "HOLA") {

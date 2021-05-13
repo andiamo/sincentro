@@ -18,7 +18,7 @@ ArrayList<CapaDibujo> capas;
 CapaDibujo capaSeleccionada;
 boolean todasCapasSeleccionadas;
 
-int MAX_TRAZOS = 100;
+int MAX_TRAZOS = 1000;
 int MAX_TOQUES = 1000;
 
 void setup() {

@@ -16,7 +16,7 @@ void pintarCapas() {
   for (int i = capas.size() - 1; i >= 0; i--) {
     CapaDibujo capa = capas.get(i);
     capa.pintar();
-    if (capa == capaSeleccionada & registrandoTrazo) {
+    if (capa == capaSeleccionada && registrandoTrazo) {
       nuevoTrazo.dibujate();
     }
   }
