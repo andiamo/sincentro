@@ -32,7 +32,7 @@ function setup() {
     w = document.body.clientWidth;
     h = document.body.clientHeight;
   }
-  canvas = createCanvas(w, h);
+  var canvas = createCanvas(w, h);
   canvas.parent('sincentro'); 
   
   cargarPinceles();  
