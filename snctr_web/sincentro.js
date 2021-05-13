@@ -66,8 +66,9 @@ function draw() {
 function mousePressed() {
   if (mostrandoID) return
   if (!registrandoTrazo) {
-    registrandoTrazo = true;
-    nuevoTrazo = new Trazo(capaSeleccionada, pinceles[capaSeleccionada.pincel].nuevoPincel(), tintasPincel[capaSeleccionada.tinta], capaSeleccionada.repetirTrazos, millis());
+    let scapa = capas[capaSeleccionada];
+    registrandoTrazo = true;    
+    nuevoTrazo = new Trazo(scapa, pinceles[scapa.pincel].nuevoPincel(), tintasPincel[scapa.tinta], scapa.repetirTrazos, millis());
   }
   nuevoTrazo.agregarUnToque(crearToque(true));
 }
@@ -82,43 +83,20 @@ function mouseDragged() {
 function mouseReleased() {
   if (mostrandoID) return  
   if (registrandoTrazo) {
-    if (capaSeleccionada.unirTrazos) {
+    let scapa = capas[capaSeleccionada];
+    if (scapa.unirTrazos) {
       nuevoTrazo.toquePrevioEsUltimo();
     } else {
-      cerrarTrazo(capaSeleccionada, modificador() === SHIFT);
+      cerrarTrazo(scapa, modificador() === SHIFT);
     }    
   }  
 }
 
 function keyPressed() {
-  if (key === '1') {
-    capaSeleccionada = capas[0];
+  if (listaContieneTecla(teclasSeleccionUnaCapas)) {
+    capaSeleccionada = int(key) - 1;
     todasCapasSeleccionadas = false;
-  } else if (key === '2') {
-    capaSeleccionada = capas[1];
-    todasCapasSeleccionadas = false;
-  } else if (key === '3') {
-    capaSeleccionada = capas[2];
-    todasCapasSeleccionadas = false;
-  } else if (key === '4') {
-    capaSeleccionada = capas[3];
-    todasCapasSeleccionadas = false;
-  } else if (key === '5') {
-    capaSeleccionada = capas[4];
-    todasCapasSeleccionadas = false;
-  } else if (key === '6') {
-    capaSeleccionada = capas[5];
-    todasCapasSeleccionadas = false;
-  } else if (key === '7') {
-    capaSeleccionada = capas[6];
-    todasCapasSeleccionadas = false;
-  } else if (key === '8') {
-    capaSeleccionada = capas[7];
-    todasCapasSeleccionadas = false;
-  } else if (key === '9') {
-    capaSeleccionada = capas[8];
-    todasCapasSeleccionadas = false;
-  } else if (key === '0') {
+  } else if (listaContieneTecla(teclasSeleccionAllCapas)) {
     todasCapasSeleccionadas = true;
   } else if (keyCode === ENTER || keyCode === RETURN) {
     mostrarTextoDeEstado = !mostrarTextoDeEstado;
@@ -127,14 +105,15 @@ function keyPressed() {
   } else if (listaContieneTecla(teclasPedirID)) {
     leerID();
   }
+
   else if (key == 'p') enviarData();
 
   lienzo.procesarTeclado();
-  for (const capa of capas) {
-  if (todasCapasSeleccionadas || capa === capaSeleccionada) {
-      capa.procesarTeclado();
-    }
-  }  
+  if (todasCapasSeleccionadas) {
+    for (const capa of capas) capa.procesarTeclado();
+  } else {
+    capas[capaSeleccionada].procesarTeclado();
+  }
 }
 
 function modificador() {
@@ -148,19 +127,20 @@ function modificador() {
 }
 
 function escribirTextoDeEstado() {  
+  let scapa = capas[capaSeleccionada];
   let texto = "";
   if (0 < otrosIDs.size()) texto = "@";
-  texto += "C" + capaSeleccionada.indice;
+  texto += "C" + scapa.indice;
   if (todasCapasSeleccionadas) texto += "!";
-  texto += ":" + pinceles[capaSeleccionada.pincel].nombre;
+  texto += ":" + pinceles[scapa.pincel].nombre;
   texto += ":f" + lienzo.tintaActual.nombre;
   texto += ":f" + lienzo.tiempoTransicionSeleccionado;
-  texto += ":p" + tintasPincel[capaSeleccionada.tinta].nombre;
-  texto += ":p" + capaSeleccionada.tiemposBorradoSeleccionado;
-  texto += ":R" + int(capaSeleccionada.repetirTrazos);
-  texto += ":U" + int(capaSeleccionada.unirTrazos);
-  texto += ":O" + capaSeleccionada.nivelOpacidadSeleccionado;
-  texto += ":E" + capaSeleccionada.nivelEscalaSeleccionado;  
+  texto += ":p" + tintasPincel[scapa.tinta].nombre;
+  texto += ":p" + scapa.tiemposBorradoSeleccionado;
+  texto += ":R" + int(scapa.repetirTrazos);
+  texto += ":U" + int(scapa.unirTrazos);
+  texto += ":O" + scapa.nivelOpacidadSeleccionado;
+  texto += ":E" + scapa.nivelEscalaSeleccionado;  
   noStroke();
   fill(lienzo.tintaActual.generarColorComplementario());
   text(texto, 0, 0, width, 20);

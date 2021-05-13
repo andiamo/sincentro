@@ -1,3 +1,6 @@
+var teclasSeleccionUnaCapas = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+var teclasSeleccionAllCapas = ['0'];
+
 var teclasDisminuirTiempoBorrado = ['-', '_'];
 var teclasAumentarTiempoBorrado  = ['+', '='];
 
@@ -10,14 +13,14 @@ function crearCapas() {
   for (let i = 0; i < 9; i++) {
     capas.push(new CapaDibujo(i + 1));
   }
-  capaSeleccionada = capas[0];
+  capaSeleccionada = 0;
 }
 
 function pintarCapas() {
   for (let i = capas.length - 1; i >= 0; i--) {
     let capa = capas[i];
     capa.pintar();
-    if (capa === capaSeleccionada && registrandoTrazo) {
+    if (capa === capas[capaSeleccionada] && registrandoTrazo) {
       nuevoTrazo.dibujate();
     }
   }
