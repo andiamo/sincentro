@@ -60,11 +60,11 @@ function setup() {
 function draw() {  
   lienzo.pintar();
   pintarCapas();  
-  if (mostrarTextoDeEstado && !leyendoID && !mostrandoID) escribirTextoDeEstado();
+  if (mostrarTextoDeEstado && !mostrandoID) escribirTextoDeEstado();
 }
 
 function mousePressed() {
-  if (leyendoID || mostrandoID) return
+  if (mostrandoID) return
   if (!registrandoTrazo) {
     registrandoTrazo = true;
     nuevoTrazo = new Trazo(capaSeleccionada, pinceles[capaSeleccionada.pincel].nuevoPincel(), tintasPincel[capaSeleccionada.tinta], capaSeleccionada.repetirTrazos, millis());
@@ -73,17 +73,14 @@ function mousePressed() {
 }
 
 function mouseDragged() {
-  if (leyendoID || mostrandoID) return
+  if (mostrandoID) return
   if (registrandoTrazo) {
-    nuevoTrazo.agregarUnToque(crearToque(false));
-    if (conectado) {
-      enviarData();
-    }
+    nuevoTrazo.agregarUnToque(crearToque(false));    
   }  
 }
 
 function mouseReleased() {
-  if (leyendoID || mostrandoID) return  
+  if (mostrandoID) return  
   if (registrandoTrazo) {
     if (capaSeleccionada.unirTrazos) {
       nuevoTrazo.toquePrevioEsUltimo();
@@ -130,6 +127,8 @@ function keyPressed() {
   } else if (listaContieneTecla(teclasPedirID)) {
     leerID();
   }
+  else if (key == 'p') enviarData();
+
   lienzo.procesarTeclado();
   for (const capa of capas) {
   if (todasCapasSeleccionadas || capa === capaSeleccionada) {
@@ -150,7 +149,7 @@ function modificador() {
 
 function escribirTextoDeEstado() {  
   let texto = "";
-  if (conectado) texto = "@";
+  if (0 < otrosIDs.size()) texto = "@";
   texto += "C" + capaSeleccionada.indice;
   if (todasCapasSeleccionadas) texto += "!";
   texto += ":" + pinceles[capaSeleccionada.pincel].nombre;
