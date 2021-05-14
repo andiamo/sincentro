@@ -29,7 +29,7 @@ var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = 
 }
 
 Trazo.prototype = {
-  cargarDatosDePeer: function(data) {
+  desempaquetar: function(data) {
     this.indice = data["indice"];
     this.peer = data["peer"];
 
@@ -67,7 +67,7 @@ Trazo.prototype = {
     this.indicePrevio = data["indice_previo"];
   },
 
-  empaquetarDatos: function() {
+  empaquetar: function() {
     let data = {};
 
     data["indice"] = this.indice;

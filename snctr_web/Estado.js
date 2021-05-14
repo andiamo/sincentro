@@ -74,6 +74,52 @@ var Estado = function(peerID) {
 }
 
 Estado.prototype = {
+  desempaquetar: function(data) {
+    this.indiceTrazo = data["indice_trazo"];
+  
+    this.capaSeleccionada = data["capa_seleccionada"];
+    this.pincelSeleccionado = data["pincel_seleccionado"];
+    this.tintaPincelSeleccionada = data["tinta_pincel_seleccionada"];
+    this.tintaFondoSeleccionada = data["tinta_fondo_seleccionada"];
+    this.todasCapasSeleccionadas = data["todas_capas_seleccionadas"];
+    this.registrandoTrazo = data["registrando_trazo"];
+    this.mostrarTextoDeEstado = data["mostrar_texto_de_estado"];
+    this.unirTrazos = data["unir_trazos"];
+    this.repetirTrazos = data["repetir_trazos"];
+    
+    this.tiempoBorradoSeleccionado = data["tiempo_borrado_seleccionado"];
+    this.nivelOpacidadSeleccionado = data["nivel_opacidad_seleccionado"];
+    this.nivelEscalaSeleccionado = data["nivel_escala_seleccionado"];
+    this.tiempoTransicionFondoSeleccionado = data["tiempo_transicion_fondo_seleccionado"];
+
+    this.tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
+    this.factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
+    this.factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);    
+  },
+
+  empaquetar: function() {
+    let data = {};
+
+    data["indice_trazo"] = this.indiceTrazo;
+  
+    data["capa_seleccionada"] = this.capaSeleccionada;
+    data["pincel_seleccionado"] = this.pincelSeleccionado;
+    data["tinta_pincel_seleccionada"] = this.tintaPincelSeleccionada;
+    data["tinta_fondo_seleccionada"] = this.tintaFondoSeleccionada;
+    data["todas_capas_seleccionadas"] = this.todasCapasSeleccionadas;
+    data["registrando_trazo"] = this.registrandoTrazo;
+    data["mostrar_texto_de_estado"] = this.mostrarTextoDeEstado;
+    data["unir_trazos"] = this.unirTrazos;
+    data["repetir_trazos"] = this.repetirTrazos;
+    
+    data["tiempo_borrado_seleccionado"] = this.tiempoBorradoSeleccionado;
+    data["nivel_opacidad_seleccionado"] = this.nivelOpacidadSeleccionado;
+    data["nivel_escala_seleccionado"] = this.nivelEscalaSeleccionado;
+    data["tiempo_transicion_fondo_seleccionado"] = this.tiempoTransicionFondoSeleccionado;
+
+    return data;
+  },
+
   actualizar: function() {
     this.tiempoBorradoTrazos.actualizar();
     this.factorOpacidadTrazos.actualizar();
@@ -133,13 +179,13 @@ Estado.prototype = {
     let capa = capas[data["indice_capa"]];
     if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
     let trazo = new Trazo();
-    trazo.cargarDatosDePeer(data);
+    trazo.desempaquetar(data);
     capa.trazos.push(trazo);
   },
 
   agregarTrazoIncompleto: function(data) {
     this.nuevoTrazo = new Trazo();
-    this.nuevoTrazo.cargarDatosDePeer(data);
+    this.nuevoTrazo.desempaquetar(data);
   },
 
   mostrar: function() {

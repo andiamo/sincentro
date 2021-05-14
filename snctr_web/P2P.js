@@ -55,7 +55,7 @@ function leerID() {
   }
 }
 
-function conectar(id, compartir = false, primera = false, enviarTrazos = false) {
+function conectar(id, compartir = false, primera = false, enviar = false) {
   if (!otrosIDs.containsKey(id)) {
     if (compartir) compartirNuevoPeer(id);
     let conn = peer.connect(id);
@@ -64,8 +64,9 @@ function conectar(id, compartir = false, primera = false, enviarTrazos = false) 
       otrosIDs.put(id, conn);
       otrosEstados.put(id, new Estado(id));
       print("AGREGAR peer", conn.peer, otrosIDs.size());
-      if (enviarTrazos) {
-        enviarTodosLosTrazos(conn);
+      if (enviar) {
+        enviarEstado(conn);
+        enviarTrazos(conn);
       }
       if (primera) {
         print("Enviando mensaje de llegada...")
@@ -136,19 +137,30 @@ function recibirData(conn, data) {
       let estado = otrosEstados.get(conn.peer);
       estado.agregarTrazoIncompleto(data);
     }
+  } else if (data["tipo"] === "ESTADO_COMPLETO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.desempaquetar(data);
+    }
   }
 }
 
-function enviarTodosLosTrazos(conn) {
+function enviarEstado(conn) {
+  let data = estado.empaquetar();
+  data["tipo"] = "ESTADO_COMPLETO";
+  conn.send(data);  
+}
+
+function enviarTrazos(conn) {
   for (let capa of capas) {
     for (let trazo of capa.trazos) {
-      let data = trazo.empaquetarDatos();
+      let data = trazo.empaquetar();
       data["tipo"] = "TRAZO_COMPLETO";
       conn.send(data);
     }    
   }
   if (estado.registrandoTrazo) {
-    let data = estado.nuevoTrazo.empaquetarDatos();
+    let data = estado.nuevoTrazo.empaquetar();
     data["tipo"] = "TRAZO_INCOMPLETO";
     conn.send(data);    
   }
