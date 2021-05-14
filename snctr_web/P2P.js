@@ -109,36 +109,43 @@ function recibirData(conn, data) {
     conectar(id, false, false, false);
   } else if (data["tipo"] === "INICIAR_TRAZO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Inciando trazo de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.iniciarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
     }
   } else if (data["tipo"] === "ACTUALIZAR_TRAZO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Actualizando trazo de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.actualizarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
     }    
   } else if (data["tipo"] === "TERMINAR_TRAZO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Terminando trazo de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.terminarTrazo(data["indice"], data["unico"], false);
     }
   } else if (data["tipo"] === "ENTRADA_TECLADO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Entrada teclado de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.procesarTeclado(data["codigo"], data["tecla"], false);
     }   
   } else if (data["tipo"] === "TRAZO_COMPLETO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Trazo completo de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.agregarTrazoCompleto(data);
     }
   } else if (data["tipo"] === "TRAZO_INCOMPLETO") {
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Trazo en progreso de ", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.agregarTrazoIncompleto(data);
     }
-  } else if (data["tipo"] === "ESTADO_COMPLETO") {
+  } else if (data["tipo"] === "ESTADO_COMPLETO") {    
     if (otrosEstados.containsKey(conn.peer)) {
+      print("Estado de", conn.peer);
       let estado = otrosEstados.get(conn.peer);
       estado.desempaquetar(data);
     }

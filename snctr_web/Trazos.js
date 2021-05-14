@@ -25,7 +25,10 @@ var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = 
   this.tiempoBorrado = 0;
   this.tiempoFinal = 0;
   this.duracionBorrado = 0;
-  this.indicePrevio = 0;  
+  this.indicePrevio = 0;
+
+  this.tiempoInterno0 = millis() - this.tiempoComienzo;
+  print("Timepo interno cero", this.tiempoInterno0);
 }
 
 Trazo.prototype = {
@@ -65,6 +68,9 @@ Trazo.prototype = {
     this.tiempoFinal = data["tiempo_final"];
     this.duracionBorrado = data["duracion_borrado"];
     this.indicePrevio = data["indice_previo"];
+
+    this.tiempoInterno0 = millis() - this.tiempoComienzo;
+    print("Timepo interno cero", this.tiempoInterno0);
   },
 
   empaquetar: function() {
@@ -117,7 +123,8 @@ Trazo.prototype = {
     let indice = this.toques.length - 1;
     let factorBorrado = 1;
     if (this.cerrado && (this.repetir || this.borrando)) {
-      let t = int(millis() - this.tiempoComienzo) % int(this.tiempoFinal - this.tiempoComienzo + 1);
+      let tiempoInterno = millis() - this.tiempoInterno0;
+      let t = int(tiempoInterno - this.tiempoComienzo) % int(this.tiempoFinal - this.tiempoComienzo + 1);
       let indiceCorriente = this.buscarIndice(t);
 
       if (this.repetir) {
