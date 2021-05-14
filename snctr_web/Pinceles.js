@@ -54,8 +54,7 @@ PincelCinta.prototype = {
     fill(tinta);
     let w = 0;
     let ptoque = null;
-    for (let i = 0; i < toques.length; i++) {
-      let toque = toques[i];
+    for (let toque of toques) {
       if (toque.primero) {
         if (ptoque !== null) endShape();        
         beginShape(QUAD_STRIP);

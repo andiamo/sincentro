@@ -66,8 +66,7 @@ class PincelCinta extends Pincel  {
     fill(tinta);
     float w = 0;
     Toque ptoque = null;
-    for (int i = 0; i < toques.length; i++) {
-      Toque toque = toques[i];
+    for (Toque toque: toques) {
       if (toque.primero) {
         if (ptoque != null) endShape();        
         beginShape(QUAD_STRIP);

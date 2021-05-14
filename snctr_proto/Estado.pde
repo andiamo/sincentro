@@ -61,6 +61,8 @@ class Estado {
   NumeroInterpolado factorEscalaTrazos;
   
   Estado() {
+    nuevoTrazo = null;
+    
     capaSeleccionada = 0;
     pincelSeleccionado = 0;
     tintaPincelSeleccionada = 0;  
@@ -76,9 +78,10 @@ class Estado {
     nivelEscalaSeleccionado = 4;
     tiempoTransicionFondoSeleccionado = 4;
     
-    tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);    
+    tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);   
     factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[nivelOpacidadSeleccionado]);
     factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[nivelEscalaSeleccionado]);
+    
     textFont(createFont("Helvetica", 18));
   }
   
@@ -94,8 +97,8 @@ class Estado {
       nuevoTrazo = new Trazo(capas.get(capaSeleccionada), 
                              pinceles.get(pincelSeleccionado).nuevoPincel(), 
                              tintasPincel.get(tintaPincelSeleccionada), 
-                             estado.factorOpacidadTrazos.valor,
-                             estado.factorEscalaTrazos.valor,
+                             factorOpacidadTrazos.valor,
+                             factorEscalaTrazos.valor,
                              repetirTrazos, millis());
     }
     nuevoTrazo.agregarUnToque(crearToque(true));    
@@ -153,7 +156,15 @@ class Estado {
         factorEscalaTrazos.establecerObjetivo(nivelesEscalaTrazos[nivelEscalaSeleccionado]);
       }
     } else {
-      if (key == ' ') {
+      if (key == DELETE || key == BACKSPACE) {
+        if (todasCapasSeleccionadas) {
+          for (CapaDibujo capa: capas) capa.borrarTrazos();
+        } else {
+          capas.get(capaSeleccionada).borrarTrazos();
+        }
+      } else if (keyCode == ENTER || keyCode == RETURN) {
+        mostrarTextoDeEstado = !mostrarTextoDeEstado;
+      } else if (key == ' ') {
         repetirTrazos = !repetirTrazos;
       } else if (listaContieneTecla(teclasUnirTrazos)) {
         unirTrazos = !unirTrazos;
@@ -169,8 +180,6 @@ class Estado {
         capas.get(i).ocultar();
       } else if (listaContieneTecla(teclasOcultarTodasLasCapas)) {
         for (CapaDibujo capa: capas) capa.ocultar();         
-      } else if (keyCode == ENTER || keyCode == RETURN) {
-        mostrarTextoDeEstado = !mostrarTextoDeEstado;
       } else if (listaContieneTecla(teclasDisminuirTiempoTransicionFondo)) {
         tiempoTransicionFondoSeleccionado = constrain(tiempoTransicionFondoSeleccionado - 1, 0, 9);
       } else if (listaContieneTecla(teclasAumentarTiempoTransicionFondo)) {
@@ -181,12 +190,6 @@ class Estado {
       } else if (listaContieneTecla(teclasAumentarTiempoBorrado)) {        
         tiempoBorradoSeleccionado = constrain(tiempoBorradoSeleccionado + 1, 0, 9);
         tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);
-      } else if (key == DELETE || key == BACKSPACE) {
-        if (todasCapasSeleccionadas) {
-          for (CapaDibujo capa: capas) capa.borrarTrazos();
-        } else {
-          capas.get(capaSeleccionada).borrarTrazos();
-        }
       } else {    
         for (Pincel p: pinceles) {
           if (listaContieneTecla(p.teclas)) {

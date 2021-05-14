@@ -5,39 +5,40 @@ function crearToque(primero) {
   return toque;
 }
 
-function cerrarTrazo(capa, unico) {  
+function cerrarTrazo(capa, unico) {
   if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift(); 
-  nuevoTrazo.cerrate(unico);
-  capa.trazos.push(nuevoTrazo);
-  registrandoTrazo = false;
+  estado.nuevoTrazo.cerrate(unico);
+  capa.trazos.push(estado.nuevoTrazo);
+  estado.registrandoTrazo = false;
 }
 
-var Trazo = function(indice, peer, capa, pincel, tinta, rep, t) {
-  this.indice = indice;
-  this.peer = peer;
+var Trazo = function(capa, pincel, tinta, factorOpacidad, factorEscala, rep, t) {
+  // this.indice = indice;
+  // this.peer = peer;
   this.capa = capa;
   this.pincel = pincel;
   this.tinta = tinta;
+  this.factorOpacidad = factorOpacidad;
+  this.factorEscala = factorEscala;  
 
   this.toques = [];
+
   this.tiempoComienzo = t;
-  this.tiempoBorrado = 0;
-  this.tiempoFinal = 0;
-
-  this.duracionBorrado = 0;
-  this.indicePrevio = 0;
-
   this.repetir = rep;
   this.cerrado = false;
   this.borrando = false;
   this.borrado = false;
+
+  this.tiempoBorrado = 0;
+  this.tiempoFinal = 0;
+  this.duracionBorrado = 0;
+  this.indicePrevio = 0;  
 }
 
 Trazo.prototype = {
-
   cerrate: function(unico) {
     this.cerrado = true;
-    this.duracionBorrado = tiemposBorradoTrazo[this.capa.tiemposBorradoSeleccionado];
+    this.duracionBorrado = int(estado.tiempoBorradoTrazos.valor);
     let ultimoToque = this.toques[this.toques.length - 1];
     let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + this.duracionBorrado);
     this.tiempoBorrado = ultimoToque.t;
@@ -46,8 +47,8 @@ Trazo.prototype = {
     this.borrando = unico;
   },
 
-  dibujate: function() {
-    if (this.capa.factorOpacidad.valor === 0) return;
+  dibujate: function(opacidadCapa) {
+    if (this.factorOpacidad === 0 || this.factorEscala === 0) return;
     
     let indice = this.toques.length - 1;
     let factorBorrado = 1;
@@ -73,8 +74,8 @@ Trazo.prototype = {
       this.indicePrevio = indiceCorriente;
     }
 
-    let opacidad = constrain(this.capa.factorOpacidad.valor * factorBorrado * 255, 1, 255);    
-    this.pincel.pintar(this.toques.slice(0, indice + 1), this.tinta.generarColor(opacidad), this.capa.factorEscala.valor);
+    let opacidad = constrain(opacidadCapa * this.factorOpacidad * factorBorrado * 255, 1, 255);
+    this.pincel.pintar(this.toques.slice(0, indice + 1), this.tinta.generarColor(opacidad), this.factorEscala);
   },
   
   borrate: function() {

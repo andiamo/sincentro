@@ -6,9 +6,6 @@
 // https://github.com/nwah/peerjs-audio-chat
 // https://github.com/peers/peerjs/issues/179
 
-var teclasMostrarID = [';', ':'];
-var teclasPedirID  = ['/', '?'];
-
 var peer = null;
 
 var miID = "";
@@ -78,14 +75,6 @@ function conectar(id, compartir = false, primera = false) {
   // }
 }
 
-function enviarData() {
-  // print("Enviando data");
-  for (let id of otrosIDs.keys()) {
-    // otrosIDs.get(id).send({x : mouseX, y : mouseY});
-    otrosIDs.get(id).send({tipo: "MENSAJE", msg : "helo"});
-  }
-}
-
 function compartirNuevoPeer(nuevoID) {
   // print("Compartiendo nuevo peer");
   for (let id of otrosIDs.keys()) {
@@ -100,6 +89,12 @@ function compartirViejosPeers(conn) {
   }
 }
 
+function enviarMouseDragged(mx, my, press, time) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "PUNTERO_ARRASTRADO", x : mx, y : my, p: press, t: time});
+  }
+}
+
 function recibirData(conn, data) {
   // Este peer recibe un mensaje de datos de otro peer, ademas de registrarlo, 
   // le avisa a los peers que ya tiene que tambien lo registren.
@@ -107,14 +102,20 @@ function recibirData(conn, data) {
 
   // if (data["tipo"] === "HOLA") {
     // print("HOLA", conn.peer);
-  /}
+  // /}
 
   if (data["tipo"] === "NUEVO_PEER") {
     let id = data["id"]
     conectar(id);
     // print("Recibido NUEVO_PEER", id, "from", conn.peer);
-  } else if (data["tipo"] === "MENSAJE") {
-    let msg = data["msg"]
+  } else if (data["tipo"] === "PUNTERO_ARRASTRADO") {    
+    // if (registrandoTrazo) {
+    //   let x = int(data["x"])
+    //   let y = int(data["y"])
+    //   let p = float(data["p"])
+    //   let t = int(data["t"])
+    //   nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
+    // }
     // print("Recibido MENSAJE", msg, "from", conn.peer);
   }  
 }

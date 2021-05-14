@@ -84,5 +84,5 @@ class CapaDibujo {
     for (Trazo trazo: trazos) {
       trazo.borrate();
     }
-  }  
+  }
 }
