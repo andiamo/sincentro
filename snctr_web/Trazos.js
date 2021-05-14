@@ -4,7 +4,7 @@ function crearToque(x, y, p, t, primero) {
   return toque;
 }
 
-var Trazo = function(indice, peer, capa, pincel, tinta, factorOpacidad, factorEscala, rep, t) {
+var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = null, factorOpacidad = 0, factorEscala = 0, rep = false, t = 0) {
   this.indice = indice;
   this.peer = peer;
 
@@ -29,6 +29,77 @@ var Trazo = function(indice, peer, capa, pincel, tinta, factorOpacidad, factorEs
 }
 
 Trazo.prototype = {
+  cargarDatosDePeer: function(data) {
+    this.indice = data["indice"];
+    this.peer = data["peer"];
+
+    this.capa = capas[data["indice_capa"]];
+    this.pincel = pinceles[data["indice_pincel"]].nuevoPincel();
+    this.tinta = tintasPincel[data["indice_tinta"]];
+
+    let datosToques = data["toques"];
+    let n = int(datosToques.length / 6);
+    for (let i = 0; i < n; i++) {
+      let x = datosToques[6 * i + 0];
+      let y = datosToques[6 * i + 1];
+      let p = datosToques[6 * i + 2];
+      let t = datosToques[6 * i + 3];
+      let primero = datosToques[6 * i + 4] === 1;
+      let ultimo = datosToques[6 * i + 5] === 1;
+      let toque = new Toque(x, y, p, t);
+      toque.primero = primero;
+      toque.ultimo = ultimo;
+      this.toques.push(toque);
+    }
+
+    this.factorOpacidad = data["factor_opacidad"];
+    this.factorEscala = data["factor_escala"];
+
+    this.tiempoComienzo = data["tiempo_comienzo"];
+    this.repetir = data["repetir"];
+    this.cerrado = data["cerrado"];
+    this.borrando = data["borrando"];
+    this.borrado = data["borrado"];
+  
+    this.tiempoBorrado = data["tiempo_borrado"];
+    this.tiempoFinal = data["tiempo_final"];
+    this.duracionBorrado = data["duracion_borrado"];
+    this.indicePrevio = data["indice_previo"];
+  },
+
+  empaquetarDatos: function() {
+    let data = {};
+
+    data["indice"] = this.indice;
+    data["peer"] = this.peer;
+
+    data["indice_capa"] = this.capa.indice;
+    data["indice_pincel"] = this.pincel.indice;
+    data["indice_tinta"] = this.tinta.indice;
+
+    let datosToques = [];
+    for (let toque of this.toques) {
+      datosToques.push(toque.x, toque.y, toque.p, toque.t, int(toque.primero), int(toque.ultimo));
+    }
+    data["toques"] = datosToques;
+
+    data["factor_opacidad"] = this.factorOpacidad;
+    data["factor_escala"] = this.factorEscala;
+
+    data["tiempo_comienzo"] = this.tiempoComienzo;
+    data["repetir"] = this.repetir;
+    data["cerrado"] = this.cerrado;
+    data["borrando"] = this.borrando;
+    data["borrado"] = this.borrado;
+  
+    data["tiempo_borrado"] = this.tiempoBorrado;
+    data["tiempo_final"] = this.tiempoFinal;
+    data["duracion_borrado"] = this.duracionBorrado;
+    data["indice_previo"] = this.indicePrevio;
+
+    return data;
+  },
+
   cerrate: function(unico, duracionBorrado) {
     this.cerrado = true;
     this.duracionBorrado = int(duracionBorrado);
@@ -118,9 +189,9 @@ Trazo.prototype = {
 
 var Toque = function(x, y, p, t) {
   this.x = x;
-  this.y = y;    
+  this.y = y;
   this.t = t;
   this.p = p;
   this.primero = false;
-  this.ultimo = false;  
+  this.ultimo = false;
 }

@@ -80,9 +80,9 @@ Estado.prototype = {
       this.registrandoTrazo = true;
       this.indiceTrazo = i;
       this.nuevoTrazo = new Trazo(this.indiceTrazo, this.peerID,
-                                  capas[this.capaSeleccionada], 
-                                  pinceles[this.pincelSeleccionado].nuevoPincel(), 
-                                  tintasPincel[this.tintaPincelSeleccionada], 
+                                  capas[this.capaSeleccionada],
+                                  pinceles[this.pincelSeleccionado].nuevoPincel(),
+                                  tintasPincel[this.tintaPincelSeleccionada],
                                   this.factorOpacidadTrazos.valor,
                                   this.factorEscalaTrazos.valor,
                                   this.repetirTrazos, t);                                    
@@ -113,7 +113,7 @@ Estado.prototype = {
         this.nuevoTrazo.toquePrevioEsUltimo();
       } else {
         let capa = capas[this.capaSeleccionada];
-        if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift(); 
+        if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
         this.nuevoTrazo.cerrate(unico, this.tiempoBorradoTrazos.valor);
         capa.trazos.push(this.nuevoTrazo);
         this.registrandoTrazo = false;
@@ -122,6 +122,14 @@ Estado.prototype = {
     if (enviar && 0 < otrosIDs.size()) {
       enviarTerminarTrazo(i, unico);
     }   
+  },
+
+  agregarTrazoCompleto: function(data) {
+    let capa = capas[data["indice_capa"]];
+    if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
+    let trazo = new Trazo();
+    trazo.cargarDatosDePeer(data);
+    capa.trazos.push(trazo);
   },
 
   mostrar: function() {

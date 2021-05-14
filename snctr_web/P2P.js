@@ -82,29 +82,21 @@ function conectar(id, compartir = false, primera = false, enviarTrazos = false) 
 }
 
 function compartirNuevoPeer(nuevoID) {
-  print("Compartiendo nuevo peer con los demas...");
+  // Compartiendo nuevo peer con los demas...
   for (let id of otrosIDs.keys()) {
     otrosIDs.get(id).send({tipo: "NUEVO_PEER", id : nuevoID});
   }
 }
 
 function compartirViejosPeers(conn) {
-  print("Compartiendo viejos peers con el nuevo...");
+  // Compartiendo viejos peers con el nuevo...
   for (let otroID of otrosIDs.keys()) {
       conn.send({tipo: "VIEJO_PEER", id : otroID});
   }
 }
 
-function enviarMouseDragged(mx, my, press, time) {
-  for (let id of otrosIDs.keys()) {
-    otrosIDs.get(id).send({tipo: "PUNTERO_ARRASTRADO", x : mx, y : my, p: press, t: time});
-  }
-}
-
 function recibirData(conn, data) {
   if (data["tipo"] === "HOLA") {
-    print("Recibiendo mensaje de llegada...")
-    print("HOLA", conn.peer);
     // Este peer recibe un mensaje de bienvenida de un nuevo peer, ademas de registrarlo, 
     // le avisa a los peers que ya tiene que tambien lo registren.
     conectar(conn.peer, true, false, true);
@@ -133,14 +125,24 @@ function recibirData(conn, data) {
     if (otrosEstados.containsKey(conn.peer)) {
       let estado = otrosEstados.get(conn.peer);
       estado.procesarTeclado(data["codigo"], data["tecla"], false);
-    }    
-  } else {
-    print("Recibido MENSAJE", data, "from", conn.peer);
+    }   
+  } else if (data["tipo"] === "TRAZO_COMPLETO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.agregarTrazoCompleto(data);
+    }
   }
 }
 
 function enviarTodosLosTrazos(conn) {
-  conn.send({tipo: "ENVIANDO TODOS LOS TRAZOS HASTA EL MOMENTO"});
+  for (let capa of capas) {
+    for (let trazo of capa.trazos) {
+      let data = trazo.empaquetarDatos();
+      data["tipo"] = "TRAZO_COMPLETO";
+      print(data);
+      conn.send(data);
+    }    
+  } 
 }
 
 function enviarIniciarTrazo(i, x, y, p, t) {
