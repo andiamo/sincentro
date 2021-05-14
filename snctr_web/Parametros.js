@@ -5,3 +5,4 @@ var nivelesEscalaTrazos = [0, 0.25, 0.5, 0.75, 1, 2.8, 4.6, 6.4, 8.2, 10.0];
 
 var MAX_TRAZOS = 1000;
 var MAX_TOQUES = 1000;
+var MAX_CAPAS = 9;

@@ -1,5 +1,5 @@
 function crearCapas() {
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < MAX_CAPAS; i++) {
     capas.push(new CapaDibujo(i));
   }
 }
@@ -9,7 +9,7 @@ function pintarCapas() {
     let capa = capas[i];
     capa.pintar();
     capa.pintarNuevoTrazo(estado);
-    for (let otroEstado of otrosEstados.values()) capa.pintarNuevoTrazo(otroEstado);
+    for (let otro of otrosEstados.values()) capa.pintarNuevoTrazo(otro);
   }
 }
 

@@ -18,7 +18,7 @@ function setup() {
 }
 
 function draw() {
-  estado.actualizar();
+  actualizarEstados();
   lienzo.pintar();
   pintarCapas();
   estado.mostrar();

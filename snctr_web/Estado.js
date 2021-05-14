@@ -40,6 +40,11 @@ function modificador() {
   return mod;
 }
 
+function actualizarEstados() {
+  estado.actualizar();
+  for (let otro of otrosEstados.values()) otro.actualizar();
+}
+
 var Estado = function(peerID) {
   this.peerID = peerID;
 
@@ -132,6 +137,11 @@ Estado.prototype = {
     capa.trazos.push(trazo);
   },
 
+  agregarTrazoIncompleto: function(data) {
+    this.nuevoTrazo = new Trazo();
+    this.nuevoTrazo.cargarDatosDePeer(data);
+  },
+
   mostrar: function() {
     if (this.mostrarTextoDeEstado && !mostrandoID) {
       let texto = "";
@@ -220,12 +230,6 @@ Estado.prototype = {
           this.tintaPincelSeleccionada = t.indice;
         }
       }
-      for (let t of tintasFondo) {
-        if (listaContieneTecla(key, t.teclas)) {
-          this.tintaFondoSeleccionada = t.indice;
-          lienzo.cambiarColor(t);
-        }
-      }
     }
     if (enviar) {
       if (listaContieneTecla(key, teclasMostrarID)) {
@@ -233,6 +237,12 @@ Estado.prototype = {
       } else if (listaContieneTecla(key, teclasPedirID)) {
         leerID();
       }
+      for (let t of tintasFondo) {
+        if (listaContieneTecla(key, t.teclas)) {
+          this.tintaFondoSeleccionada = t.indice;
+          lienzo.cambiarColor(t);
+        }
+      }      
       enviarEntradaTeclado(keyCode, key);
     }      
   }

@@ -131,6 +131,11 @@ function recibirData(conn, data) {
       let estado = otrosEstados.get(conn.peer);
       estado.agregarTrazoCompleto(data);
     }
+  } else if (data["tipo"] === "TRAZO_INCOMPLETO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.agregarTrazoIncompleto(data);
+    }
   }
 }
 
@@ -139,10 +144,14 @@ function enviarTodosLosTrazos(conn) {
     for (let trazo of capa.trazos) {
       let data = trazo.empaquetarDatos();
       data["tipo"] = "TRAZO_COMPLETO";
-      print(data);
       conn.send(data);
     }    
-  } 
+  }
+  if (estado.registrandoTrazo) {
+    let data = estado.nuevoTrazo.empaquetarDatos();
+    data["tipo"] = "TRAZO_INCOMPLETO";
+    conn.send(data);    
+  }
 }
 
 function enviarIniciarTrazo(i, x, y, p, t) {
