@@ -14,10 +14,13 @@ function setup() {
   iniciarP2P();
 
   lienzo = new LienzoFondo();
-  estado = new Estado(miID);  
+  estado = new Estado(miID);
+
+  mostrarPortada();
 }
 
 function draw() {
+  if (mostrandoPortada) return
   actualizarEstados();
   lienzo.pintar();
   pintarCapas();
@@ -25,21 +28,22 @@ function draw() {
 }
 
 function mousePressed() {
-  if (mostrandoID) return
+  if (mostrandoID || mostrandoPortada) return
   estado.iniciarTrazo(estado.indiceTrazo + 1, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
 }
 
 function mouseDragged() {
-  if (mostrandoID) return
+  if (mostrandoID || mostrandoPortada) return
   estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
 }
 
 function mouseReleased() {
-  if (mostrandoID) return
+  if (mostrandoID || mostrandoPortada) return
   estado.terminarTrazo(estado.indiceTrazo, modificador() === SHIFT, true);
 }
 
 function keyPressed() {
+  if (mostrandoPortada) return
   estado.procesarTeclado(keyCode, key, true);
 }
 

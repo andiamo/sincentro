@@ -14,12 +14,20 @@ function distintos(ptoque, toque) {
   return ptoque.x !== toque.x || ptoque.y !== toque.y;
 }
 
+function obtenerListaTeclasPinceles() {
+  let teclas = [];
+  for (let pincel of pinceles) {
+    teclas.push(pincel.teclas);
+  }
+  return teclas;
+}
+
 var PincelLinea = function(indice, nombre, teclas) { 
   this.indice = indice;
   this.nombre = nombre;
   this.teclas = teclas;
 }
-  
+
 PincelLinea.prototype = {  
   nuevoPincel: function() {
     return new PincelLinea(this.indice, this.nombre, this.teclas);

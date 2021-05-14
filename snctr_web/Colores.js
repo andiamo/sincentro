@@ -1,3 +1,19 @@
+function obtenerListaTeclasTintasFondo() {
+  let teclas = [];
+  for (let tinta of tintasFondo) {
+    teclas.push(tinta.teclas);
+  }
+  return teclas;
+}
+
+function obtenerListaTeclasTintasPincel() {
+  let teclas = [];
+  for (let tinta of tintasPincel) {
+    teclas.push(tinta.teclas);
+  }
+  return teclas;
+}
+
 function cargarColores() {  
   tintasFondo.push(new Tinta(0, "BL", ['Z', 'z'], '#FFFFFF'));
   tintasFondo.push(new Tinta(1, "NG", ['X', 'x'], '#000000'));
