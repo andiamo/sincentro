@@ -1,6 +1,6 @@
 void crearCapas() {
   capas = new ArrayList<CapaDibujo>();
-  for (int i = 0; i < 9; i++) {
+  for (int i = 0; i < MAX_CAPAS; i++) {
     capas.add(new CapaDibujo(i + 1));
   }
 }
