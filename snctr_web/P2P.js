@@ -118,25 +118,21 @@ function recibirData(conn, data) {
     if (otrosEstados.containsKey(conn.peer)) {
       let estado = otrosEstados.get(conn.peer);
       estado.iniciarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
-      // print("Recibido MENSAJE", data, "from", conn.peer);
     }
   } else if (data["tipo"] === "ACTUALIZAR_TRAZO") {
     if (otrosEstados.containsKey(conn.peer)) {
       let estado = otrosEstados.get(conn.peer);
       estado.actualizarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
-      // print("Recibido MENSAJE", data, "from", conn.peer);
     }    
   } else if (data["tipo"] === "TERMINAR_TRAZO") {
     if (otrosEstados.containsKey(conn.peer)) {
       let estado = otrosEstados.get(conn.peer);
       estado.terminarTrazo(data["indice"], data["unico"], false);
-      // print("Recibido MENSAJE", data, "from", conn.peer);
     }
   } else if (data["tipo"] === "ENTRADA_TECLADO") {
     if (otrosEstados.containsKey(conn.peer)) {
       let estado = otrosEstados.get(conn.peer);
       estado.procesarTeclado(data["codigo"], data["tecla"], false);
-      // print("Recibido MENSAJE", data, "from", conn.peer);
     }    
   } else {
     print("Recibido MENSAJE", data, "from", conn.peer);

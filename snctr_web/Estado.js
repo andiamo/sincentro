@@ -76,7 +76,6 @@ Estado.prototype = {
   },
 
   iniciarTrazo: function(i, x, y, p, t, enviar = false) {
-    print("Iniciar trazo", i, x, y, p, t);
     if (!this.registrandoTrazo) {
       this.registrandoTrazo = true;
       this.indiceTrazo = i;
@@ -96,7 +95,6 @@ Estado.prototype = {
   },
 
   actualizarTrazo: function(i, x, y, p, t, enviar = false) {
-    print("Actualizar trazo", i, x, y, p, t);
     if (this.registrandoTrazo) {
       if (i === this.nuevoTrazo.indice) {
         this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
@@ -110,7 +108,6 @@ Estado.prototype = {
   },
 
   terminarTrazo: function(i, unico, enviar = false) {
-    print("Terminar trazo", i, this.nuevoTrazo.toques.length);
     if (this.registrandoTrazo) {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
@@ -166,7 +163,7 @@ Estado.prototype = {
         for (let capa of capas) capa.borrarTrazos(this.peerID);
       } else {
         capas[this.capaSeleccionada].borrarTrazos(this.peerID);
-      }      
+      }
     } else if (keyCode === ENTER || keyCode === RETURN) {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
@@ -175,16 +172,25 @@ Estado.prototype = {
       this.unirTrazos = !this.unirTrazos;
     } else if (listaContieneTecla(key, teclasSeleccionUnaCapa)) {
       this.capaSeleccionada = indiceDeTecla(key, teclasSeleccionUnaCapa);
-      capas[this.capaSeleccionada].mostrar();
+      if (enviar) {
+        capas[this.capaSeleccionada].mostrar(); 
+      }
       this.todasCapasSeleccionadas = false;
     } else if (listaContieneTecla(key, teclasSeleccionTodasLasCapas)) {
-      for (let capa of capas) capa.mostrar();
-      this.todasCapasSeleccionadas = true;        
+      if (enviar) {
+        for (let capa of capas) capa.mostrar();
+      }
+      this.todasCapasSeleccionadas = true;
     } else if (listaContieneTecla(key, teclasOcultarUnaCapa)) {
       let i = indiceDeTecla(key, teclasOcultarUnaCapa);
-      capas[i].ocultar();
-    } else if (listaContieneTecla(key, teclasOcultarTodasLasCapas)) {
-      for (let capa of capas) capa.ocultar();         
+      if (enviar) {
+        capas[i].ocultar();
+      }
+    } 
+    else if (listaContieneTecla(key, teclasOcultarTodasLasCapas)) {
+      if (enviar) {
+        for (let capa of capas) capa.ocultar();
+      }
     } else if (listaContieneTecla(key, teclasDisminuirTiempoTransicionFondo)) {
       this.tiempoTransicionFondoSeleccionado = constrain(this.tiempoTransicionFondoSeleccionado - 1, 0, 9);
     } else if (listaContieneTecla(key, teclasAumentarTiempoTransicionFondo)) {
@@ -195,10 +201,6 @@ Estado.prototype = {
     } else if (listaContieneTecla(key, teclasAumentarTiempoBorrado)) {        
       this.tiempoBorradoSeleccionado = constrain(this.tiempoBorradoSeleccionado + 1, 0, 9);
       this.tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
-    } else if (listaContieneTecla(key, teclasMostrarID)) {
-      mostrarID();
-    } else if (listaContieneTecla(key, teclasPedirID)) {
-      leerID();
     } else {    
       for (let p of pinceles) {
         if (listaContieneTecla(key, p.teclas)) {
@@ -217,7 +219,12 @@ Estado.prototype = {
         }
       }
     }
-    if (enviar && 0 < otrosIDs.size()) {
+    if (enviar) {
+      if (listaContieneTecla(key, teclasMostrarID)) {
+        mostrarID();
+      } else if (listaContieneTecla(key, teclasPedirID)) {
+        leerID();
+      }
       enviarEntradaTeclado(keyCode, key);
     }      
   }
