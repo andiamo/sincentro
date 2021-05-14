@@ -10,11 +10,11 @@ function setup() {
   
   cargarPinceles();  
   cargarColores();  
-  crearCapas();  
-  lienzo = new LienzoFondo();
-  estado = new Estado();
-
+  crearCapas();
   iniciarP2P();
+
+  lienzo = new LienzoFondo();
+  estado = new Estado(miID);  
 }
 
 function draw() {
@@ -25,19 +25,19 @@ function draw() {
 }
 
 function mousePressed() {
-  estado.iniciarTrazo();
+  estado.iniciarTrazo(mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
 }
 
 function mouseDragged() {
-  estado.actualizarTrazo();
+  estado.actualizarTrazo(mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
 }
 
 function mouseReleased() {
-  estado.terminarTrazo();
+  estado.terminarTrazo(modificador() === SHIFT);
 }
 
 function keyPressed() {
-  estado.procesarTeclado();
+  estado.procesarTeclado(keyCode, key);
 }
 
 function configurarPantallaCompleta() {

@@ -1,20 +1,13 @@
-function crearToque(primero) {
-  let p = sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY));
-  let toque = new Toque(mouseX, mouseY, p, millis());
+function crearToque(x, y, p, t, primero) {  
+  let toque = new Toque(x, y, p, t);
   toque.primero = primero;
   return toque;
 }
 
-function cerrarTrazo(capa, unico) {
-  if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift(); 
-  estado.nuevoTrazo.cerrate(unico);
-  capa.trazos.push(estado.nuevoTrazo);
-  estado.registrandoTrazo = false;
-}
+var Trazo = function(indice, peer, capa, pincel, tinta, factorOpacidad, factorEscala, rep, t) {
+  this.indice = indice;
+  this.peer = peer;
 
-var Trazo = function(capa, pincel, tinta, factorOpacidad, factorEscala, rep, t) {
-  // this.indice = indice;
-  // this.peer = peer;
   this.capa = capa;
   this.pincel = pincel;
   this.tinta = tinta;
@@ -36,9 +29,9 @@ var Trazo = function(capa, pincel, tinta, factorOpacidad, factorEscala, rep, t) 
 }
 
 Trazo.prototype = {
-  cerrate: function(unico) {
+  cerrate: function(unico, duracionBorrado) {
     this.cerrado = true;
-    this.duracionBorrado = int(estado.tiempoBorradoTrazos.valor);
+    this.duracionBorrado = int(duracionBorrado);
     let ultimoToque = this.toques[this.toques.length - 1];
     let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + this.duracionBorrado);
     this.tiempoBorrado = ultimoToque.t;

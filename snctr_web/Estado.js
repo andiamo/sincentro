@@ -15,24 +15,24 @@ var teclasOcultarTodasLasCapas = [')'];
 var teclasMostrarID = [';', ':'];
 var teclasPedirID  = ['/', '?'];
 
-function listaContieneTecla(teclas) {
+function listaContieneTecla(tecla, teclas) {
   for (let tcl of teclas) {
-    if (tcl === key) return true;
+    if (tcl === tecla) return true;
   }
   return false;
 }
 
-function indiceDeTecla(teclas) {
+function indiceDeTecla(tecla, teclas) {
   for (let i = 0; i < teclas.length; i++) {
     let tcl = teclas[i];
-    if (tcl === key) return i;
+    if (tcl === tecla) return i;
   }
   return -1;
 }
 
 function modificador() {
   let mod = -1;
-  if (keyPressed) {
+  if (isKeyPressed) {
     if (keyCode === SHIFT) {
       mod = SHIFT;
     }
@@ -40,8 +40,11 @@ function modificador() {
   return mod;
 }
 
-var Estado = function() {
+var Estado = function(peerID) {
+  this.peerID = peerID;
+
   this.nuevoTrazo = null;
+  this.indiceTrazo = 0;
 
   this.capaSeleccionada = 0;
   this.pincelSeleccionado = 0;
@@ -72,34 +75,40 @@ Estado.prototype = {
     this.factorEscalaTrazos.actualizar();  
   },
 
-  iniciarTrazo: function() {
+  iniciarTrazo: function(x, y, p, t) {
     if (mostrandoID) return
     if (!this.registrandoTrazo) {
-      this.registrandoTrazo = true;
-      this.nuevoTrazo = new Trazo(capas[this.capaSeleccionada], 
+      this.registrandoTrazo = true;      
+      this.nuevoTrazo = new Trazo(this.indiceTrazo, miID,
+                                  capas[this.capaSeleccionada], 
                                   pinceles[this.pincelSeleccionado].nuevoPincel(), 
                                   tintasPincel[this.tintaPincelSeleccionada], 
                                   this.factorOpacidadTrazos.valor,
                                   this.factorEscalaTrazos.valor,
                                   this.repetirTrazos, millis());
-    }
-    this.nuevoTrazo.agregarUnToque(crearToque(true));
+      this.indiceTrazo++;                                  
+    }    
+    this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, true));
   },
 
-  actualizarTrazo: function() {
+  actualizarTrazo: function(x, y, p, t) {
     if (mostrandoID) return
-    if (this.registrandoTrazo) {
-      this.nuevoTrazo.agregarUnToque(crearToque(false));
+    if (this.registrandoTrazo) {    
+      this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
     }
   },
 
-  terminarTrazo: function() {
+  terminarTrazo: function(unico) {
     if (mostrandoID) return  
     if (this.registrandoTrazo) {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
       } else {
-        cerrarTrazo(capas[this.capaSeleccionada], modificador() === SHIFT);
+        let capa = capas[this.capaSeleccionada];
+        if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift(); 
+        this.nuevoTrazo.cerrate(unico, this.tiempoBorradoTrazos.valor);
+        capa.trazos.push(this.nuevoTrazo);
+        this.registrandoTrazo = false;
       }    
     } 
   },
@@ -125,7 +134,7 @@ Estado.prototype = {
     }    
   },
 
-  procesarTeclado: function() {
+  procesarTeclado: function(keyCode, key) {
     if (keyCode === LEFT_ARROW) {
       this.nivelOpacidadSeleccionado = constrain(this.nivelOpacidadSeleccionado - 1, 0, 9);
       this.factorOpacidadTrazos.establecerObjetivo(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
@@ -148,47 +157,47 @@ Estado.prototype = {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
-    } else if (listaContieneTecla(teclasUnirTrazos)) {
+    } else if (listaContieneTecla(key, teclasUnirTrazos)) {
       this.unirTrazos = !this.unirTrazos;
-    } else if (listaContieneTecla(teclasSeleccionUnaCapa)) {
-      this.capaSeleccionada = indiceDeTecla(teclasSeleccionUnaCapa);
+    } else if (listaContieneTecla(key, teclasSeleccionUnaCapa)) {
+      this.capaSeleccionada = indiceDeTecla(key, teclasSeleccionUnaCapa);
       capas[this.capaSeleccionada].mostrar();
       this.todasCapasSeleccionadas = false;
-    } else if (listaContieneTecla(teclasSeleccionTodasLasCapas)) {
+    } else if (listaContieneTecla(key, teclasSeleccionTodasLasCapas)) {
       for (let capa of capas) capa.mostrar();
       this.todasCapasSeleccionadas = true;        
-    } else if (listaContieneTecla(teclasOcultarUnaCapa)) {
-      let i = indiceDeTecla(teclasOcultarUnaCapa);
+    } else if (listaContieneTecla(key, teclasOcultarUnaCapa)) {
+      let i = indiceDeTecla(key, teclasOcultarUnaCapa);
       capas[i].ocultar();
-    } else if (listaContieneTecla(teclasOcultarTodasLasCapas)) {
+    } else if (listaContieneTecla(key, teclasOcultarTodasLasCapas)) {
       for (let capa of capas) capa.ocultar();         
-    } else if (listaContieneTecla(teclasDisminuirTiempoTransicionFondo)) {
+    } else if (listaContieneTecla(key, teclasDisminuirTiempoTransicionFondo)) {
       this.tiempoTransicionFondoSeleccionado = constrain(this.tiempoTransicionFondoSeleccionado - 1, 0, 9);
-    } else if (listaContieneTecla(teclasAumentarTiempoTransicionFondo)) {
+    } else if (listaContieneTecla(key, teclasAumentarTiempoTransicionFondo)) {
       this.tiempoTransicionFondoSeleccionado = constrain(this.tiempoTransicionFondoSeleccionado + 1, 0, 9);  
-    } else if (listaContieneTecla(teclasDisminuirTiempoBorrado)) {       
+    } else if (listaContieneTecla(key, teclasDisminuirTiempoBorrado)) {       
       this.tiempoBorradoSeleccionado = constrain(this.tiempoBorradoSeleccionado - 1, 0, 9);
       this.tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
-    } else if (listaContieneTecla(teclasAumentarTiempoBorrado)) {        
+    } else if (listaContieneTecla(key, teclasAumentarTiempoBorrado)) {        
       this.tiempoBorradoSeleccionado = constrain(this.tiempoBorradoSeleccionado + 1, 0, 9);
       this.tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
-    } else if (listaContieneTecla(teclasMostrarID)) {
+    } else if (listaContieneTecla(key, teclasMostrarID)) {
       mostrarID();
-    } else if (listaContieneTecla(teclasPedirID)) {
+    } else if (listaContieneTecla(key, teclasPedirID)) {
       leerID();
     } else {    
       for (let p of pinceles) {
-        if (listaContieneTecla(p.teclas)) {
+        if (listaContieneTecla(key, p.teclas)) {
           this.pincelSeleccionado = p.indice;
         }
       }
       for (let t of tintasPincel) {
-        if (listaContieneTecla(t.teclas)) {
+        if (listaContieneTecla(key, t.teclas)) {
           this.tintaPincelSeleccionada = t.indice;
         }
       }
       for (let t of tintasFondo) {
-        if (listaContieneTecla(t.teclas)) {
+        if (listaContieneTecla(key, t.teclas)) {
           this.tintaFondoSeleccionada = t.indice;
           lienzo.cambiarColor(t);
         }
