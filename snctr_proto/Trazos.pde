@@ -9,9 +9,9 @@ Toque crearToque(boolean primero) {
 
 void cerrarTrazo(CapaDibujo capa, boolean unico) {  
   if (capa.trazos.size() == MAX_TRAZOS) capa.trazos.remove(0);
-  nuevoTrazo.cerrate(unico);
-  capa.trazos.add(nuevoTrazo);
-  registrandoTrazo = false;
+  estado.nuevoTrazo.cerrate(unico);
+  capa.trazos.add(estado.nuevoTrazo);
+  estado.registrandoTrazo = false;
 }
 
 class Trazo {
@@ -47,7 +47,7 @@ class Trazo {
   
   void cerrate(boolean unico) {
     cerrado = true;
-    duracionBorrado = tiemposBorradoTrazo[capa.tiemposBorradoSeleccionado];
+    duracionBorrado = tiemposBorradoTrazo[estado.tiemposBorradoSeleccionado];
     Toque ultimoToque = toques.get(toques.size() - 1);  
     Toque fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + duracionBorrado);
     tiempoBorrado = ultimoToque.t;
@@ -57,7 +57,7 @@ class Trazo {
   }
 
   void dibujate() {
-    if (capa.factorOpacidad.valor == 0) return;
+    if (estado.factorOpacidadTrazos.valor == 0) return;
     
     int indice = toques.size() - 1;
     float factorBorrado = 1;
@@ -85,8 +85,8 @@ class Trazo {
 
     List<Toque> list = toques.subList(0, indice + 1);
     atoques = list.toArray(new Toque[indice + 1]);
-    float opacidad = constrain(capa.factorOpacidad.valor * factorBorrado * 255, 1, 255);
-    pincel.pintar(atoques, tinta.generarColor(opacidad), capa.factorEscala.valor);
+    float opacidad = constrain(estado.factorOpacidadTrazos.valor * factorBorrado * 255, 1, 255);
+    pincel.pintar(atoques, tinta.generarColor(opacidad), estado.factorEscalaTrazos.valor);
   }
   
   void borrate() {
