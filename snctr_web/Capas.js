@@ -1,6 +1,6 @@
 function crearCapas() {
   for (let i = 0; i < 9; i++) {
-    capas.push(new CapaDibujo(i + 1));
+    capas.push(new CapaDibujo(i));
   }
 }
 
@@ -8,9 +8,8 @@ function pintarCapas() {
   for (let i = capas.length - 1; i >= 0; i--) {
     let capa = capas[i];
     capa.pintar();
-    if (i === estado.capaSeleccionada && estado.registrandoTrazo) {
-      estado.nuevoTrazo.dibujate(capa.opacidad.valor);
-    }
+    capa.pintarNuevoTrazo(estado);
+    for (let otroEstado of otrosEstados.values()) capa.pintarNuevoTrazo(otroEstado);
   }
 }
 
@@ -65,6 +64,12 @@ CapaDibujo.prototype = {
     }
     for (let idx of paraRemover) this.trazos.splice(idx, 1);
   },
+
+  pintarNuevoTrazo: function(estado) {
+    if (this.indice === estado.capaSeleccionada && estado.registrandoTrazo) {
+      estado.nuevoTrazo.dibujate(this.opacidad.valor);
+    }
+  },
   
   mostrar: function() {
     this.opacidad.establecerObjetivo(1);
@@ -74,9 +79,9 @@ CapaDibujo.prototype = {
     this.opacidad.establecerObjetivo(0);
   },
 
-  borrarTrazos: function() {
+  borrarTrazos: function(peer) {
     for (let trazo of this.trazos) {
-      trazo.borrate();
+      if (trazo.peer == peer) trazo.borrate();
     }
   }
 }

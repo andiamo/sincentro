@@ -12,7 +12,7 @@ var Trazo = function(indice, peer, capa, pincel, tinta, factorOpacidad, factorEs
   this.pincel = pincel;
   this.tinta = tinta;
   this.factorOpacidad = factorOpacidad;
-  this.factorEscala = factorEscala;  
+  this.factorEscala = factorEscala;
 
   this.toques = [];
 

@@ -25,14 +25,17 @@ function draw() {
 }
 
 function mousePressed() {
+  if (estado.mostrandoID) return
   estado.iniciarTrazo(mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
 }
 
 function mouseDragged() {
-  estado.actualizarTrazo(mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
+  if (estado.mostrandoID) return
+  estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
 }
 
 function mouseReleased() {
+  if (estado.mostrandoID) return
   estado.terminarTrazo(modificador() === SHIFT);
 }
 

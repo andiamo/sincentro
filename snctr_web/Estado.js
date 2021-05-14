@@ -75,31 +75,32 @@ Estado.prototype = {
     this.factorEscalaTrazos.actualizar();  
   },
 
-  iniciarTrazo: function(x, y, p, t) {
-    if (mostrandoID) return
+  iniciarTrazo: function(x, y, p, t) {    
     if (!this.registrandoTrazo) {
-      this.registrandoTrazo = true;      
-      this.nuevoTrazo = new Trazo(this.indiceTrazo, miID,
+      this.registrandoTrazo = true;
+      this.indiceTrazo++;
+      this.nuevoTrazo = new Trazo(this.indiceTrazo, this.peerID,
                                   capas[this.capaSeleccionada], 
                                   pinceles[this.pincelSeleccionado].nuevoPincel(), 
                                   tintasPincel[this.tintaPincelSeleccionada], 
                                   this.factorOpacidadTrazos.valor,
                                   this.factorEscalaTrazos.valor,
-                                  this.repetirTrazos, millis());
-      this.indiceTrazo++;                                  
+                                  this.repetirTrazos, millis());                                    
     }    
     this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, true));
   },
 
-  actualizarTrazo: function(x, y, p, t) {
-    if (mostrandoID) return
-    if (this.registrandoTrazo) {    
-      this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
+  actualizarTrazo: function(i, x, y, p, t) {
+    if (this.registrandoTrazo) {
+      if (i === this.nuevoTrazo.indice) {
+        this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
+      } else {
+        terminarTrazo(false);
+      }      
     }
   },
 
   terminarTrazo: function(unico) {
-    if (mostrandoID) return  
     if (this.registrandoTrazo) {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
@@ -149,9 +150,9 @@ Estado.prototype = {
       this.factorEscalaTrazos.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
     } else if (keyCode === DELETE || keyCode === BACKSPACE) {
       if (this.todasCapasSeleccionadas) {
-        for (let capa of capas) capa.borrarTrazos();
+        for (let capa of capas) capa.borrarTrazos(this.peerID);
       } else {
-        capas[this.capaSeleccionada].borrarTrazos();
+        capas[this.capaSeleccionada].borrarTrazos(this.peerID);
       }      
     } else if (keyCode === ENTER || keyCode === RETURN) {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
