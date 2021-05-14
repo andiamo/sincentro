@@ -25,22 +25,22 @@ function draw() {
 }
 
 function mousePressed() {
-  if (estado.mostrandoID) return
-  estado.iniciarTrazo(mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
+  if (mostrandoID) return
+  estado.iniciarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
 }
 
 function mouseDragged() {
-  if (estado.mostrandoID) return
-  estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis());
+  if (mostrandoID) return
+  estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
 }
 
 function mouseReleased() {
-  if (estado.mostrandoID) return
-  estado.terminarTrazo(modificador() === SHIFT);
+  if (mostrandoID) return
+  estado.terminarTrazo(estado.indiceTrazo, modificador() === SHIFT, true);
 }
 
 function keyPressed() {
-  estado.procesarTeclado(keyCode, key);
+  estado.procesarTeclado(keyCode, key, true);
 }
 
 function configurarPantallaCompleta() {

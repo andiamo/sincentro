@@ -115,18 +115,59 @@ function recibirData(conn, data) {
   } else if (data["tipo"] === "VIEJO_PEER") {
     let id = data["id"]
     conectar(id, false, false, false);
-  } else if (data["tipo"] === "PUNTERO_ARRASTRADO") {    
-    // if (registrandoTrazo) {
-    //   let x = int(data["x"])
-    //   let y = int(data["y"])
-    //   let p = float(data["p"])
-    //   let t = int(data["t"])    
-    // }
+  } else if (data["tipo"] === "INICIAR_TRAZO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.iniciarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
+      print("Recibido MENSAJE", data, "from", conn.peer);
+    }
+  } else if (data["tipo"] === "ACTUALIZAR_TRAZO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.actualizarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
+      print("Recibido MENSAJE", data, "from", conn.peer);
+    }    
+  } else if (data["tipo"] === "TERMINAR_TRAZO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.actualizarTrazo(data["indice"], data["unico"], false);
+      print("Recibido MENSAJE", data, "from", conn.peer);
+    }
+  } else if (data["tipo"] === "ENTRADA_TECLADO") {
+    if (otrosEstados.containsKey(conn.peer)) {
+      let estado = otrosEstados.get(conn.peer);
+      estado.procesarTeclado(data["codigo"], data["tecla"], false);
+      print("Recibido MENSAJE", data, "from", conn.peer);
+    }    
   } else {
     print("Recibido MENSAJE", data, "from", conn.peer);
   }
 }
 
 function enviarTodosLosTrazos(conn) {
-  conn.send({tipo: "ALGO"});
+  conn.send({tipo: "ENVIANDO TODOS LOS TRAZOS HASTA EL MOMENTO"});
+}
+
+function enviarIniciarTrazo(i, x, y, p, t) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "INICIAR_TRAZO", indice: i, posx : x, posy: y, pres: p, millis: t});
+  }
+}
+
+function enviarActualizarTrazo(i, x, y, p, t) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "ACTUALIZAR_TRAZO", indice: i, posx : x, posy: y, pres: p, millis: t});
+  }  
+}
+
+function enviarTerminarTrazo(i, u) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "TERMINAR_TRAZO", indice: i, unico: u});
+  }
+}
+
+function enviarEntradaTeclado(kc, k) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: keyCode, tecla: k});
+  }
 }

@@ -75,32 +75,39 @@ Estado.prototype = {
     this.factorEscalaTrazos.actualizar();  
   },
 
-  iniciarTrazo: function(x, y, p, t) {    
+  iniciarTrazo: function(i, x, y, p, t, enviar = false) {    
     if (!this.registrandoTrazo) {
       this.registrandoTrazo = true;
-      this.indiceTrazo++;
+      this.indiceTrazo = i + 1;
       this.nuevoTrazo = new Trazo(this.indiceTrazo, this.peerID,
                                   capas[this.capaSeleccionada], 
                                   pinceles[this.pincelSeleccionado].nuevoPincel(), 
                                   tintasPincel[this.tintaPincelSeleccionada], 
                                   this.factorOpacidadTrazos.valor,
                                   this.factorEscalaTrazos.valor,
-                                  this.repetirTrazos, millis());                                    
+                                  this.repetirTrazos, t);                                    
     }    
     this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, true));
-  },
 
-  actualizarTrazo: function(i, x, y, p, t) {
-    if (this.registrandoTrazo) {
-      if (i === this.nuevoTrazo.indice) {
-        this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
-      } else {
-        terminarTrazo(false);
-      }      
+    if (enviar && 0 < otrosIDs.size()) {
+      enviarIniciarTrazo(i + 1, x, y, p, t);
     }
   },
 
-  terminarTrazo: function(unico) {
+  actualizarTrazo: function(i, x, y, p, t, enviar = false) {
+    if (this.registrandoTrazo) {
+      // if (i === this.nuevoTrazo.indice) {
+        this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
+      // } else {
+      //   this.terminarTrazo(i, false);
+      // }
+    }
+    if (enviar && 0 < otrosIDs.size()) {
+      enviarActualizarTrazo(i, x, y, p, t);
+    }
+  },
+
+  terminarTrazo: function(i, unico, enviar = false) {
     if (this.registrandoTrazo) {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
@@ -110,8 +117,11 @@ Estado.prototype = {
         this.nuevoTrazo.cerrate(unico, this.tiempoBorradoTrazos.valor);
         capa.trazos.push(this.nuevoTrazo);
         this.registrandoTrazo = false;
-      }    
-    } 
+      }
+    }
+    if (enviar && 0 < otrosIDs.size()) {
+      enviarTerminarTrazo(i, unico);
+    }   
   },
 
   mostrar: function() {
@@ -135,7 +145,7 @@ Estado.prototype = {
     }    
   },
 
-  procesarTeclado: function(keyCode, key) {
+  procesarTeclado: function(keyCode, key, enviar = false) {
     if (keyCode === LEFT_ARROW) {
       this.nivelOpacidadSeleccionado = constrain(this.nivelOpacidadSeleccionado - 1, 0, 9);
       this.factorOpacidadTrazos.establecerObjetivo(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
@@ -204,5 +214,8 @@ Estado.prototype = {
         }
       }
     }
+    if (enviar && 0 < otrosIDs.size()) {
+      enviarEntradaTeclado(keyCode, key);
+    }      
   }
 }
