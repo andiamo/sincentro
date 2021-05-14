@@ -18,6 +18,8 @@ class Trazo {
   CapaDibujo capa;
   Pincel pincel;
   Tinta tinta;
+  float factorOpacidad;
+  float factorEscala;
   ArrayList<Toque> toques;
   Toque[] atoques;
   int tiempoComienzo;
@@ -30,10 +32,12 @@ class Trazo {
   int duracionBorrado;
   int indicePrevio;
   
-  Trazo(CapaDibujo capa, Pincel pincel, Tinta tinta, boolean rep, int t) {    
+  Trazo(CapaDibujo capa, Pincel pincel, Tinta tinta, float factorOpacidad, float factorEscala, boolean rep, int t) {    
     this.capa = capa;
     this.pincel = pincel;
     this.tinta = tinta;
+    this.factorOpacidad = factorOpacidad;
+    this.factorEscala = factorEscala;
     
     toques = new ArrayList<Toque>();
     
@@ -57,7 +61,7 @@ class Trazo {
   }
 
   void dibujate() {
-    if (estado.factorOpacidadTrazos.valor == 0) return;
+    if (factorOpacidad == 0 || factorEscala == 0) return;
     
     int indice = toques.size() - 1;
     float factorBorrado = 1;
@@ -85,8 +89,8 @@ class Trazo {
 
     List<Toque> list = toques.subList(0, indice + 1);
     atoques = list.toArray(new Toque[indice + 1]);
-    float opacidad = constrain(estado.factorOpacidadTrazos.valor * factorBorrado * 255, 1, 255);
-    pincel.pintar(atoques, tinta.generarColor(opacidad), estado.factorEscalaTrazos.valor);
+    float opacidad = constrain(factorOpacidad * factorBorrado * 255, 1, 255);
+    pincel.pintar(atoques, tinta.generarColor(opacidad), factorEscala);
   }
   
   void borrate() {

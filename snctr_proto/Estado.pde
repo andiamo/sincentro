@@ -4,8 +4,11 @@ char[] teclasAumentarTiempoBorrado  = {'+', '='};
 char[] teclasDisminuirTiempoTransicionFondo = {'<', ','};
 char[] teclasAumentarTiempoTransicionFondo  = {'>', '.'};
 
-char[] teclasSeleccionUnaCapas = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
-char[] teclasSeleccionAllCapas = {'0'};
+char[] teclasSeleccionUnaCapa = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+char[] teclasSeleccionTodasLasCapas = {'0'};
+
+char[] teclasOcultarUnaCapa = {'!', '@', '#', '$', '%', '^', '&', '*', '('};
+char[] teclasOcultarTodasLasCapas = {')'};
 
 boolean listaContieneTecla(char[] teclas) {
   for (char tcl: teclas) {
@@ -72,6 +75,8 @@ class Estado {
       nuevoTrazo = new Trazo(capas.get(capaSeleccionada), 
                              pinceles.get(pincelSeleccionado).nuevoPincel(), 
                              tintasPincel.get(tintaPincelSeleccionada), 
+                             estado.factorOpacidadTrazos.valor,
+                             estado.factorEscalaTrazos.valor,
                              repetirTrazos, millis());
     }
     nuevoTrazo.agregarUnToque(crearToque(true));    
@@ -102,7 +107,7 @@ class Estado {
       texto += ":f" + tintasFondo.get(tintaFondoSeleccionada).nombre;
       texto += ":f" + tiempoTransicionFondoSeleccionado;
       texto += ":p" + tintasPincel.get(tintaPincelSeleccionada).nombre;
-      texto += ":p" + tiemposBorradoSeleccionado;  
+      texto += ":B" + tiemposBorradoSeleccionado;  
       texto += ":R" + int(repetirTrazos);
       texto += ":U" + int(unirTrazos);
       texto += ":O" + nivelOpacidadSeleccionado;
@@ -132,10 +137,10 @@ class Estado {
         repetirTrazos = !repetirTrazos;
       } else if (key == TAB) {      
         unirTrazos = !unirTrazos;
-      } else if (listaContieneTecla(teclasSeleccionUnaCapas)) {
+      } else if (listaContieneTecla(teclasSeleccionUnaCapa)) {
         capaSeleccionada = Character.getNumericValue(key) - 1;      
         todasCapasSeleccionadas = false;
-      } else if (listaContieneTecla(teclasSeleccionAllCapas)) {
+      } else if (listaContieneTecla(teclasSeleccionTodasLasCapas)) {
         todasCapasSeleccionadas = true;
       } else if (keyCode == ENTER || keyCode == RETURN) {
         mostrarTextoDeEstado = !mostrarTextoDeEstado;
