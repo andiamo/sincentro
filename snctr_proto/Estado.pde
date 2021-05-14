@@ -4,6 +4,8 @@ char[] teclasAumentarTiempoBorrado  = {'+', '='};
 char[] teclasDisminuirTiempoTransicionFondo = {'<', ','};
 char[] teclasAumentarTiempoTransicionFondo  = {'>', '.'};
 
+char[] teclasUnirTrazos = {'~', '`'};
+
 char[] teclasSeleccionUnaCapa = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
 char[] teclasSeleccionTodasLasCapas = {'0'};
 
@@ -153,7 +155,7 @@ class Estado {
     } else {
       if (key == ' ') {
         repetirTrazos = !repetirTrazos;
-      } else if (key == TAB) {      
+      } else if (listaContieneTecla(teclasUnirTrazos)) {
         unirTrazos = !unirTrazos;
       } else if (listaContieneTecla(teclasSeleccionUnaCapa)) {
         capaSeleccionada = indiceDeTecla(teclasSeleccionUnaCapa);
