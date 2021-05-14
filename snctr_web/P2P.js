@@ -64,7 +64,7 @@ function conectar(id, compartir = false, primera = false, enviar = false) {
       otrosIDs.put(id, conn);
       otrosEstados.put(id, new Estado(id));
       print("AGREGAR peer", conn.peer, otrosIDs.size());
-      if (enviar) {
+      if (enviar) {        
         enviarEstado(conn);
         enviarTrazos(conn);
       }
@@ -146,12 +146,14 @@ function recibirData(conn, data) {
 }
 
 function enviarEstado(conn) {
+  print("Enviando estado al peer", conn.peer);
   let data = estado.empaquetar();
   data["tipo"] = "ESTADO_COMPLETO";
   conn.send(data);  
 }
 
 function enviarTrazos(conn) {
+  print("Enviando trazos al peer", conn.peer);
   for (let capa of capas) {
     for (let trazo of capa.trazos) {
       let data = trazo.empaquetar();
