@@ -26,7 +26,7 @@ function draw() {
 
 function mousePressed() {
   if (mostrandoID) return
-  estado.iniciarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
+  estado.iniciarTrazo(estado.indiceTrazo + 1, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
 }
 
 function mouseDragged() {

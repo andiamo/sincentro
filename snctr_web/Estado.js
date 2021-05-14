@@ -75,10 +75,11 @@ Estado.prototype = {
     this.factorEscalaTrazos.actualizar();  
   },
 
-  iniciarTrazo: function(i, x, y, p, t, enviar = false) {    
+  iniciarTrazo: function(i, x, y, p, t, enviar = false) {
+    print("Iniciar trazo", i, x, y, p, t);
     if (!this.registrandoTrazo) {
       this.registrandoTrazo = true;
-      this.indiceTrazo = i + 1;
+      this.indiceTrazo = i;
       this.nuevoTrazo = new Trazo(this.indiceTrazo, this.peerID,
                                   capas[this.capaSeleccionada], 
                                   pinceles[this.pincelSeleccionado].nuevoPincel(), 
@@ -90,17 +91,18 @@ Estado.prototype = {
     this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, true));
 
     if (enviar && 0 < otrosIDs.size()) {
-      enviarIniciarTrazo(i + 1, x, y, p, t);
+      enviarIniciarTrazo(i, x, y, p, t);
     }
   },
 
   actualizarTrazo: function(i, x, y, p, t, enviar = false) {
+    print("Actualizar trazo", i, x, y, p, t);
     if (this.registrandoTrazo) {
-      // if (i === this.nuevoTrazo.indice) {
+      if (i === this.nuevoTrazo.indice) {
         this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
-      // } else {
-      //   this.terminarTrazo(i, false);
-      // }
+      } else {
+       this.terminarTrazo(i, false);
+      }
     }
     if (enviar && 0 < otrosIDs.size()) {
       enviarActualizarTrazo(i, x, y, p, t);
@@ -108,6 +110,7 @@ Estado.prototype = {
   },
 
   terminarTrazo: function(i, unico, enviar = false) {
+    print("Terminar trazo", i, this.nuevoTrazo.toques.length);
     if (this.registrandoTrazo) {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
