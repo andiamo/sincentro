@@ -10,7 +10,7 @@ void pintarCapas() {
     CapaDibujo capa = capas.get(i);
     capa.pintar();
     if (i == estado.capaSeleccionada && estado.registrandoTrazo) {
-      estado.nuevoTrazo.dibujate();
+      estado.nuevoTrazo.dibujate(capa.opacidad.valor);
     }
   }
 }
@@ -54,20 +54,31 @@ class LienzoFondo {
 class CapaDibujo {
   int indice;
   ArrayList<Trazo> trazos;
+  NumeroInterpolado opacidad;
   
   CapaDibujo(int indice) {
     this.indice = indice;    
-    trazos = new ArrayList<Trazo>();  
+    trazos = new ArrayList<Trazo>();
+    opacidad = new NumeroInterpolado(1);
   }
   
   void pintar() {
+    opacidad.actualizar();
     ArrayList<Trazo> paraRemover = new ArrayList<Trazo>();
     for (Trazo trazo: trazos) {
-      trazo.dibujate();
+      trazo.dibujate(opacidad.valor);
       if (trazo.borrado) paraRemover.add(trazo);
     }
     trazos.removeAll(paraRemover);
   }
+  
+  void mostrar() {
+    opacidad.establecerObjetivo(1);
+  }
+
+  void ocultar() {
+    opacidad.establecerObjetivo(0);
+  }  
   
   void borrarTrazos() {
     for (Trazo trazo: trazos) {

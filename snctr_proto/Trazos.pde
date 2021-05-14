@@ -51,7 +51,7 @@ class Trazo {
   
   void cerrate(boolean unico) {
     cerrado = true;
-    duracionBorrado = tiemposBorradoTrazo[estado.tiemposBorradoSeleccionado];
+    duracionBorrado = int(estado.tiempoBorradoTrazos.valor);
     Toque ultimoToque = toques.get(toques.size() - 1);  
     Toque fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + duracionBorrado);
     tiempoBorrado = ultimoToque.t;
@@ -60,7 +60,7 @@ class Trazo {
     borrando = unico;
   }
 
-  void dibujate() {
+  void dibujate(float opacidadCapa) {
     if (factorOpacidad == 0 || factorEscala == 0) return;
     
     int indice = toques.size() - 1;
@@ -89,7 +89,7 @@ class Trazo {
 
     List<Toque> list = toques.subList(0, indice + 1);
     atoques = list.toArray(new Toque[indice + 1]);
-    float opacidad = constrain(factorOpacidad * factorBorrado * 255, 1, 255);
+    float opacidad = constrain(opacidadCapa * factorOpacidad * factorBorrado * 255, 1, 255);
     pincel.pintar(atoques, tinta.generarColor(opacidad), factorEscala);
   }
   

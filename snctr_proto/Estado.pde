@@ -17,6 +17,15 @@ boolean listaContieneTecla(char[] teclas) {
   return false;
 }
 
+int indiceDeTecla(char[] teclas) {
+  for (int i = 0; i < teclas.length; i++) {
+    char tcl = teclas[i];
+    if (tcl == key) return i;
+  }
+  return -1;
+}
+
+
 int modificador() {
   int mod = -1;
   if (keyPressed) {
@@ -42,10 +51,11 @@ class Estado {
   int tiempoTransicionFondoSeleccionado;
 
   boolean mostrarTextoDeEstado;
-  int tiemposBorradoSeleccionado = 2;
-  int nivelOpacidadSeleccionado = 9;
+  int tiempoBorradoSeleccionado;
+  NumeroInterpolado tiempoBorradoTrazos;  
+  int nivelOpacidadSeleccionado;
   NumeroInterpolado factorOpacidadTrazos;
-  int nivelEscalaSeleccionado = 4;
+  int nivelEscalaSeleccionado;
   NumeroInterpolado factorEscalaTrazos;
   
   Estado() {
@@ -58,15 +68,22 @@ class Estado {
     mostrarTextoDeEstado = true;
     unirTrazos = false;
     repetirTrazos = true;
+    
+    tiempoBorradoSeleccionado = 2;
+    nivelOpacidadSeleccionado = 9;
+    nivelEscalaSeleccionado = 4;
     tiempoTransicionFondoSeleccionado = 4;
+    
+    tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);    
     factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[nivelOpacidadSeleccionado]);
     factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[nivelEscalaSeleccionado]);
     textFont(createFont("Helvetica", 18));
   }
   
   void actualizar() {
+    tiempoBorradoTrazos.actualizar();
     factorOpacidadTrazos.actualizar();
-    factorEscalaTrazos.actualizar();    
+    factorEscalaTrazos.actualizar();
   }
   
   void iniciarTrazo() {
@@ -101,13 +118,14 @@ class Estado {
   void mostrar() {
     if (mostrarTextoDeEstado) {
       String texto = "";
-      texto = "C" + (capaSeleccionada + 1);
+      texto = "C" + (capaSeleccionada + 1);      
+      if (capas.get(capaSeleccionada).opacidad.valor == 0) texto += "?";       
       if (todasCapasSeleccionadas) texto += "!";
       texto += ":" + pinceles.get(pincelSeleccionado).nombre;
       texto += ":f" + tintasFondo.get(tintaFondoSeleccionada).nombre;
       texto += ":f" + tiempoTransicionFondoSeleccionado;
       texto += ":p" + tintasPincel.get(tintaPincelSeleccionada).nombre;
-      texto += ":B" + tiemposBorradoSeleccionado;  
+      texto += ":B" + tiempoBorradoSeleccionado;  
       texto += ":R" + int(repetirTrazos);
       texto += ":U" + int(unirTrazos);
       texto += ":O" + nivelOpacidadSeleccionado;
@@ -138,20 +156,29 @@ class Estado {
       } else if (key == TAB) {      
         unirTrazos = !unirTrazos;
       } else if (listaContieneTecla(teclasSeleccionUnaCapa)) {
-        capaSeleccionada = Character.getNumericValue(key) - 1;      
+        capaSeleccionada = indiceDeTecla(teclasSeleccionUnaCapa);
+        capas.get(capaSeleccionada).mostrar();
         todasCapasSeleccionadas = false;
       } else if (listaContieneTecla(teclasSeleccionTodasLasCapas)) {
-        todasCapasSeleccionadas = true;
+        for (CapaDibujo capa: capas) capa.mostrar();
+        todasCapasSeleccionadas = true;        
+      } else if (listaContieneTecla(teclasOcultarUnaCapa)) {
+        int i = indiceDeTecla(teclasOcultarUnaCapa);
+        capas.get(i).ocultar();
+      } else if (listaContieneTecla(teclasOcultarTodasLasCapas)) {
+        for (CapaDibujo capa: capas) capa.ocultar();         
       } else if (keyCode == ENTER || keyCode == RETURN) {
         mostrarTextoDeEstado = !mostrarTextoDeEstado;
       } else if (listaContieneTecla(teclasDisminuirTiempoTransicionFondo)) {
         tiempoTransicionFondoSeleccionado = constrain(tiempoTransicionFondoSeleccionado - 1, 0, 9);
       } else if (listaContieneTecla(teclasAumentarTiempoTransicionFondo)) {
         tiempoTransicionFondoSeleccionado = constrain(tiempoTransicionFondoSeleccionado + 1, 0, 9);  
-      } else if (listaContieneTecla(teclasDisminuirTiempoBorrado)) {
-        tiemposBorradoSeleccionado = constrain(tiemposBorradoSeleccionado - 1, 0, 9);
-      } else if (listaContieneTecla(teclasAumentarTiempoBorrado)) {
-        tiemposBorradoSeleccionado = constrain(tiemposBorradoSeleccionado + 1, 0, 9);  
+      } else if (listaContieneTecla(teclasDisminuirTiempoBorrado)) {       
+        tiempoBorradoSeleccionado = constrain(tiempoBorradoSeleccionado - 1, 0, 9);
+        tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);
+      } else if (listaContieneTecla(teclasAumentarTiempoBorrado)) {        
+        tiempoBorradoSeleccionado = constrain(tiempoBorradoSeleccionado + 1, 0, 9);
+        tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[tiempoBorradoSeleccionado]);
       } else if (key == DELETE || key == BACKSPACE) {
         if (todasCapasSeleccionadas) {
           for (CapaDibujo capa: capas) capa.borrarTrazos();
