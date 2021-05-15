@@ -1,11 +1,3 @@
-// Documentacion de la API:
-// https://peerjs.com/docs.html
-// https://www.toptal.com/webrtc/taming-webrtc-with-peerjs
-
-// Ejemplos:
-// https://github.com/nwah/peerjs-audio-chat
-// https://github.com/peers/peerjs/issues/179
-
 var peer = null;
 
 var miID = "";

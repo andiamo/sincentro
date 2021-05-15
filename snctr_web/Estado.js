@@ -194,7 +194,7 @@ Estado.prototype = {
     if (this.mostrarTextoDeEstado && !mostrandoID) {
       let texto = "";
       texto = "C" + (this.capaSeleccionada + 1);
-      if (capas[this.capaSeleccionada].opacidad.valor == 0) texto += "?";       
+      if (capas[this.capaSeleccionada].opacidad.valor === 0) texto += "?";       
       if (this.todasCapasSeleccionadas) texto += "!";
       texto += ":" + pinceles[this.pincelSeleccionado].nombre;
       texto += ":f" + tintasFondo[this.tintaFondoSeleccionada].nombre;

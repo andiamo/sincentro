@@ -81,7 +81,7 @@ CapaDibujo.prototype = {
 
   borrarTrazos: function(peer) {
     for (let trazo of this.trazos) {
-      if (trazo.peer == peer) trazo.borrate();
+      if (trazo.peer === peer) trazo.borrate();
     }
   }
 }
