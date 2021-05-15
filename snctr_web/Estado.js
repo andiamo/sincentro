@@ -174,7 +174,7 @@ Estado.prototype = {
     }
     if (enviar && 0 < otrosIDs.size()) {
       enviarTerminarTrazo(i, unico);
-    }   
+    }
   },
 
   agregarTrazoCompleto: function(data) {

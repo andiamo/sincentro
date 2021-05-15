@@ -1,4 +1,5 @@
-var mostrandoPortada;
+var cerrada = true;
+var tiempoCierre = -1;
 
 function mostrarPortada() {
   createDiv("SINCENTRO").position(10, 10);
@@ -11,15 +12,24 @@ function mostrarPortada() {
   createDiv("Con las teclas " + formatearListaDeTeclas(obtenerListaTeclasPinceles()) + " puede elegir el pincel").position(10, 190);
   createDiv("Con las teclas " + formatearListaDeTeclas(obtenerListaTeclasTintasPincel()) + " puede elegir el color del pincel").position(10, 220);
   createDiv("Con las teclas " + formatearListaDeTeclas(obtenerListaTeclasTintasFondo()) + " puede elegir el color del fondo").position(10, 250);
+  createDiv("Para mas información, visite <a href=\"https://github.com/codeanticode/sincentro\" target=\"_blank\">el repositorio con el código fuente</a>.").position(10, 280);
 
-  createButton('COMENZAR').position(10, 280).size(100, 30).mousePressed(cerrarPortada);
+  createButton('COMENZAR').position(10, 310).size(100, 30).mousePressed(cerrarPortada);
 
-  mostrandoPortada = true;
+  cerrada = false;
 }
 
 function cerrarPortada() {
   removeElements();
-  mostrandoPortada = false;
+  tiempoCierre = millis();
+}
+
+function mostrandoPortada() {
+  if (cerrada) return false;
+  if (0 <= tiempoCierre && 250 < millis() - tiempoCierre) {
+    cerrada = true;
+  }
+  return true;
 }
 
 function formatearListaDeTeclas(lista) {
