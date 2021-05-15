@@ -1,10 +1,8 @@
 # SINCENTRO
 
-Esta es un app en Processing (proto) y p5.js ([web](https://github.com/codeanticode/sincentro/tree/main/snctr_web)) para experimentar con ideas de dibujo en vivo peer-to-peer (P2P). La app web utiliza la biblioteca PeerJS para comunicación P2P a través del estándar WebRTC.
+Esta es un app en Processing ([proto](https://github.com/codeanticode/sincentro/tree/main/snctr_proto)) y p5.js ([web](https://github.com/codeanticode/sincentro/tree/main/snctr_web)) para experimentar con ideas de dibujo en vivo peer-to-peer (P2P). La app web utiliza la biblioteca PeerJS para comunicación P2P a través del estándar WebRTC.
 
-El app web puede ser accedida para dibujar colaborativamente con otros usuarios en la siguiente página:
-
-https://andrescolubri.net/sincentro/
+El app web puede ser accedida para dibujar colaborativamente con otros usuarios en [esta página](https://andrescolubri.net/sincentro/):
 
 ## Algunos recursos
 
@@ -14,7 +12,6 @@ https://andrescolubri.net/sincentro/
 
 * PeeJS: https://peerjs.com/
   - Repo con el código fuente de la libreria: https://github.com/peers/peerjs
-  - Repo con el código fuente del servidor de "señalización": https://developer.mozilla.org/en-US/docs/Web/Guide/API/WebRTC/Peer-to-peer_communications_with_WebRTC
+  - Repo con el código fuente del servidor de "señalización": https://github.com/peers/peerjs-server
 
-* Compilacion de software de dibujo "raro": https://github.com/REAS/sketchmachine/wiki/Weird-Drawing-Software
-
+* Compilación de software de dibujo "raro": https://github.com/REAS/sketchmachine/wiki/Weird-Drawing-Software
