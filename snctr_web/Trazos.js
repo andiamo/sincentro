@@ -28,7 +28,6 @@ var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = 
   this.indicePrevio = 0;
 
   this.tiempoInterno0 = millis() - this.tiempoComienzo;
-  print("Timepo interno cero", this.tiempoInterno0);
 }
 
 Trazo.prototype = {
@@ -70,7 +69,6 @@ Trazo.prototype = {
     this.indicePrevio = data["indice_previo"];
 
     this.tiempoInterno0 = millis() - this.tiempoComienzo;
-    print("Timepo interno cero", this.tiempoInterno0);
   },
 
   empaquetar: function() {

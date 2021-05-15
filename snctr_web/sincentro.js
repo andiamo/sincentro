@@ -11,10 +11,11 @@ function setup() {
   cargarPinceles();  
   cargarColores();  
   crearCapas();
-  iniciarP2P();
 
   lienzo = new LienzoFondo();
-  estado = new Estado(miID);
+  estado = new Estado();
+
+  iniciarP2P();
 
   mostrarPortada();
 }

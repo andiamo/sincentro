@@ -45,7 +45,7 @@ function actualizarEstados() {
   for (let otro of otrosEstados.values()) otro.actualizar();
 }
 
-var Estado = function(peerID) {
+var Estado = function(peerID = "") {
   this.peerID = peerID;
 
   this.nuevoTrazo = null;
@@ -75,6 +75,7 @@ var Estado = function(peerID) {
 
 Estado.prototype = {
   desempaquetar: function(data) {
+    this.peerID = data["peer_id"]
     this.indiceTrazo = data["indice_trazo"];
   
     this.capaSeleccionada = data["capa_seleccionada"];
@@ -100,6 +101,7 @@ Estado.prototype = {
   empaquetar: function() {
     let data = {};
 
+    data["peer_id"] = this.peerID;
     data["indice_trazo"] = this.indiceTrazo;
   
     data["capa_seleccionada"] = this.capaSeleccionada;
