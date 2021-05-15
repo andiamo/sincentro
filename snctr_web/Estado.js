@@ -278,17 +278,36 @@ Estado.prototype = {
       }
     }
     if (enviar) {
+      // Funciones que solo se llevan a cabo cuando esta funcion es llamada desde el peer local:
+
+      // 1. Mostramos/leemos el ID del peer
       if (listaContieneTecla(key, teclasMostrarID)) {
         mostrarID();
       } else if (listaContieneTecla(key, teclasPedirID)) {
         leerID();
       }
+
+      // 2. Cambiamos el color del fondo
       for (let t of tintasFondo) {
         if (listaContieneTecla(key, t.teclas)) {
           this.tintaFondoSeleccionada = t.indice;
           lienzo.cambiarColor(t);
         }
-      }      
+      }
+
+      // Tambien borramos los trazos de los peers que ya no estan conectados
+      if (keyCode === DELETE || keyCode === BACKSPACE) {
+        for (let id of otrosEstados.keys()) {
+          if (!otrosIDs.containsKey(id)) {
+            if (this.todasCapasSeleccionadas) {
+              for (let capa of capas) capa.borrarTrazos(id);
+            } else {
+              capas[this.capaSeleccionada].borrarTrazos(id);
+            }
+          }
+        }
+      }
+
       enviarEntradaTeclado(keyCode, key);
     }      
   }
