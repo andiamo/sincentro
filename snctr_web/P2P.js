@@ -62,14 +62,11 @@ function conectar(id, compartir = false, primera = false, enviar = false) {
 
     let conn = peer.connect(id);
 
-
-
     conn.on('open', function() {
       if (compartir) compartirViejosPeers(conn);
       otrosIDs.put(id, conn);
-      otrosEstados.put(id, new Estado(id));
       print("AGREGAR peer", conn.peer, otrosIDs.size());
-      if (enviar) {        
+      if (enviar) {
         enviarEstado(conn);
         enviarTrazos(conn);
       }
@@ -78,10 +75,12 @@ function conectar(id, compartir = false, primera = false, enviar = false) {
         conn.send({tipo: "HOLA"});
       }
     });
+
     conn.on('close', function() {
       otrosIDs.remove(conn.peer);
       print("REMOVER peer", conn.peer, otrosIDs.size());
     });
+
   } else {
     print("Ya estoy conectado con", id);
   }
@@ -113,47 +112,32 @@ function recibirData(conn, data) {
     let id = data["id"]
     conectar(id, false, false, false);
   } else if (data["tipo"] === "INICIAR_TRAZO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      // print("Inciando trazo de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.iniciarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
-    }
+    obtenerEstado(conn.peer).iniciarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
   } else if (data["tipo"] === "ACTUALIZAR_TRAZO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      // print("Actualizando trazo de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.actualizarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
-    }    
+    obtenerEstado(conn.peer).actualizarTrazo(data["indice"], data["posx"], data["posy"], data["pres"], data["millis"], false);
   } else if (data["tipo"] === "TERMINAR_TRAZO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      // print("Terminando trazo de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.terminarTrazo(data["indice"], data["unico"], false);
-    }
+    obtenerEstado(conn.peer).terminarTrazo(data["indice"], data["unico"], false);
   } else if (data["tipo"] === "ENTRADA_TECLADO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      // print("Recibiendo entrada teclado de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.procesarTeclado(data["codigo"], data["tecla"], false);
-    }   
+    obtenerEstado(conn.peer).procesarTeclado(data["codigo"], data["tecla"], false);
   } else if (data["tipo"] === "TRAZO_COMPLETO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      print("Recibiendo trazo completo de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.agregarTrazoCompleto(data);
-    }
+    print("Recibiendo trazo completo de ", conn.peer);
+    obtenerEstado(conn.peer).agregarTrazoCompleto(data);
   } else if (data["tipo"] === "TRAZO_INCOMPLETO") {
-    if (otrosEstados.containsKey(conn.peer)) {
-      print("Recibiendo trazo en progreso de ", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.agregarTrazoIncompleto(data);
-    }
-  } else if (data["tipo"] === "ESTADO_COMPLETO") {    
-    if (otrosEstados.containsKey(conn.peer)) {
-      print("Recibiendo estado de", conn.peer);
-      let estado = otrosEstados.get(conn.peer);
-      estado.desempaquetar(data);
-    }
+    print("Recibiendo trazo en progreso de ", conn.peer);
+    obtenerEstado(conn.peer).agregarTrazoIncompleto(data);
+  } else if (data["tipo"] === "ESTADO_COMPLETO") {
+    print("Recibiendo estado de", conn.peer);
+    obtenerEstado(conn.peer).desempaquetar(data);
+  }
+}
+
+function obtenerEstado(id) {
+  if (otrosEstados.containsKey(id)) {
+    return otrosEstados.get(id);
+  } else {
+    let nuevoEstado = new Estado(id);
+    otrosEstados.put(id, nuevoEstado);
+    return nuevoEstado;
   }
 }
 
