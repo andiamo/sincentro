@@ -2,7 +2,7 @@
 
 Esta es un app en Processing ([proto](https://github.com/codeanticode/sincentro/tree/main/snctr_proto)) y p5.js ([web](https://github.com/codeanticode/sincentro/tree/main/snctr_web)) para experimentar con ideas de dibujo en vivo peer-to-peer (P2P). La app web utiliza la biblioteca PeerJS para comunicación P2P a través del estándar WebRTC.
 
-El app web puede ser accedida para dibujar colaborativamente con otros usuarios en [esta página](https://andrescolubri.net/sincentro/).
+El app web puede ser accedida para dibujar colaborativamente con otros usuarios en [esta página](https://andrescolubri.net/sincentro/). No es necesario ningún servidor central, ya que WebRTC permite comunicacion P2P decentralizada.
 
 ## Modificando el código
 
