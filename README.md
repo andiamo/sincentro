@@ -2,7 +2,11 @@
 
 Esta es un app en Processing ([proto](https://github.com/codeanticode/sincentro/tree/main/snctr_proto)) y p5.js ([web](https://github.com/codeanticode/sincentro/tree/main/snctr_web)) para experimentar con ideas de dibujo en vivo peer-to-peer (P2P). La app web utiliza la biblioteca PeerJS para comunicación P2P a través del estándar WebRTC.
 
-El app web puede ser accedida para dibujar colaborativamente con otros usuarios en [esta página](https://andrescolubri.net/sincentro/):
+El app web puede ser accedida para dibujar colaborativamente con otros usuarios en [esta página](https://andrescolubri.net/sincentro/).
+
+## Modificando el código
+
+Este app esta pensada para ser modificada y adaptada sin restricciones (la licencia es [MIT](https://es.wikipedia.org/wiki/Licencia_MIT)). El código es minimal y la idea es que se puedan agregar nuevos pinceles y colores con facilidad. Ver este artículo en la Wiki del proyecto con más información al respecto.
 
 ## Algunos recursos
 
