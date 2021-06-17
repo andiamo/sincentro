@@ -4,8 +4,6 @@ var teclasAumentarTiempoBorrado  = ['+', '='];
 var teclasDisminuirTiempoTransicionFondo = ['<', ','];
 var teclasAumentarTiempoTransicionFondo  = ['>', '.'];
 
-var teclasUnirTrazos = ['~', '`']
-
 var teclasSeleccionUnaCapa = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 var teclasSeleccionTodasLasCapas = ['0'];
 
@@ -234,8 +232,11 @@ Estado.prototype = {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
-    } else if (listaContieneTecla(key, teclasUnirTrazos)) {
+    }  else if (keyCode === ENTER || keyCode === RETURN) {
       this.unirTrazos = !this.unirTrazos;
+      if (!this.unirTrazos) {
+        this.terminarTrazo(this.indiceTrazo, false, enviar);
+      }
     } else if (listaContieneTecla(key, teclasSeleccionUnaCapa)) {
       this.capaSeleccionada = indiceDeTecla(key, teclasSeleccionUnaCapa);
       if (enviar) {
