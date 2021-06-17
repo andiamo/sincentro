@@ -158,8 +158,8 @@ Trazo.prototype = {
   },
   
   toquePrevioEsUltimo: function() {
-    if (0 < toques.length) {
-      let toque = toques[toques.length - 1];
+    if (0 < this.toques.length) {
+      let toque = this.toques[this.toques.length - 1];
       toque.ultimo = true;
     }    
   },
