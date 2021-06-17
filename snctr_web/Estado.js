@@ -230,7 +230,7 @@ Estado.prototype = {
       } else {
         capas[this.capaSeleccionada].borrarTrazos(this.peerID);
       }
-    } else if (keyCode === ENTER || keyCode === RETURN) {
+    } else if (keyCode === TAB) {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
