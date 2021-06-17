@@ -228,11 +228,11 @@ Estado.prototype = {
       } else {
         capas[this.capaSeleccionada].borrarTrazos(this.peerID);
       }
-    } else if (keyCode === TAB) {
+    } else if (keyCode === ENTER || keyCode === RETURN) {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
-    }  else if (keyCode === ENTER || keyCode === RETURN) {
+    }  else if (keyCode === TAB) {
       this.unirTrazos = !this.unirTrazos;
       if (!this.unirTrazos) {
         this.terminarTrazo(this.indiceTrazo, false, enviar);
@@ -253,8 +253,7 @@ Estado.prototype = {
       if (enviar) {
         capas[i].ocultar();
       }
-    } 
-    else if (listaContieneTecla(key, teclasOcultarTodasLasCapas)) {
+    } else if (listaContieneTecla(key, teclasOcultarTodasLasCapas)) {
       if (enviar) {
         for (let capa of capas) capa.ocultar();
       }
