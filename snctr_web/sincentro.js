@@ -31,21 +31,25 @@ function draw() {
 function mousePressed() {
   if (mostrandoID || mostrandoPortada()) return
   estado.iniciarTrazo(estado.indiceTrazo + 1, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
+  return false;
 }
 
 function mouseDragged() {
   if (mostrandoID || mostrandoPortada()) return
   estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, sqrt(sq(mouseX - pmouseX) + sq(mouseY - pmouseY)), millis(), true);
+  return false;
 }
 
 function mouseReleased() {
   if (mostrandoID || mostrandoPortada()) return
   estado.terminarTrazo(estado.indiceTrazo, modificador() === SHIFT, true);
+  return false;
 }
 
 function keyPressed() {
-  if (mostrandoPortada()) return
+  if (mostrandoPortada()) return false
   estado.procesarTeclado(keyCode, key, true);
+  return false;
 }
 
 function configurarPantallaCompleta() {
