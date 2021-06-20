@@ -180,6 +180,6 @@ function enviarTerminarTrazo(i, u) {
 
 function enviarEntradaTeclado(kc, k) {
   for (let id of otrosIDs.keys()) {
-    otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: keyCode, tecla: k});
+    otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: kc, tecla: k});
   }
 }
