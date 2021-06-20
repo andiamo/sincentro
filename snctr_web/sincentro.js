@@ -5,6 +5,7 @@ var capas = [];
 var lienzo;
 var estado;
 var mensajes;
+var interface;
 
 function setup() {
   // https://www.codeleaks.io/get-url-parameter-javascript/
@@ -12,32 +13,6 @@ function setup() {
   this.queryString = window.location.search;
   const urlParams = new URLSearchParams(this.queryString);
   const otroID = urlParams.get('peer')
-  print(otroID);
-
-  
-/*
-
-file:///Users/andres/code/sincentro/snctr_web/index.html?peer=8a853b72-ac5b-45d3-b03a-50a7845ce967
-
-https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
-      const shareData = {
-        title: 'SINCENTRO',
-        text: 'Dibujemos juntos',
-        url: 'https://andrescolubri.net/sincentro?peer=' + this.peerID,
-      }    
-
-      createButton('COMPARTIR URL').position(10, 310).size(120, 30).mousePressed(async () => {
-        try {
-          await navigator.share(shareData)
-          print('MDN shared successfully');
-          // resultPara.textContent = 'MDN shared successfully'
-        } catch(err) {
-          print('Error: ' + err);
-          // resultPara.textContent = 'Error: ' + err
-        }
-      });
-*/
-
 
   configurarPantallaCompleta();
   
@@ -48,6 +23,7 @@ https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
   lienzo = new LienzoFondo();
   estado = new Estado();
   mensajes = new Mensajes();
+  interface = new Interface();
 
   iniciarP2P(otroID);
 
@@ -61,6 +37,7 @@ function draw() {
   pintarCapas();
   estado.mostrar();
   mensajes.mostrar();
+  interface.mostrar();
 }
 
 function mousePressed() {
