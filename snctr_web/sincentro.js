@@ -4,8 +4,41 @@ var tintasPincel = [];
 var capas = [];
 var lienzo;
 var estado;
+var mensajes;
 
 function setup() {
+  // https://www.codeleaks.io/get-url-parameter-javascript/
+  // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
+  this.queryString = window.location.search;
+  const urlParams = new URLSearchParams(this.queryString);
+  const otroID = urlParams.get('peer')
+  print(otroID);
+
+  
+/*
+
+file:///Users/andres/code/sincentro/snctr_web/index.html?peer=8a853b72-ac5b-45d3-b03a-50a7845ce967
+
+https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
+      const shareData = {
+        title: 'SINCENTRO',
+        text: 'Dibujemos juntos',
+        url: 'https://andrescolubri.net/sincentro?peer=' + this.peerID,
+      }    
+
+      createButton('COMPARTIR URL').position(10, 310).size(120, 30).mousePressed(async () => {
+        try {
+          await navigator.share(shareData)
+          print('MDN shared successfully');
+          // resultPara.textContent = 'MDN shared successfully'
+        } catch(err) {
+          print('Error: ' + err);
+          // resultPara.textContent = 'Error: ' + err
+        }
+      });
+*/
+
+
   configurarPantallaCompleta();
   
   cargarPinceles();  
@@ -14,10 +47,11 @@ function setup() {
 
   lienzo = new LienzoFondo();
   estado = new Estado();
+  mensajes = new Mensajes();
 
-  iniciarP2P();
+  iniciarP2P(otroID);
 
-  mostrarPortada();
+  // mostrarPortada();
 }
 
 function draw() {
@@ -26,6 +60,7 @@ function draw() {
   lienzo.pintar();
   pintarCapas();
   estado.mostrar();
+  mensajes.mostrar();
 }
 
 function mousePressed() {
