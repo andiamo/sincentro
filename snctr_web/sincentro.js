@@ -9,6 +9,7 @@ var iu;
 
 function setup() {
   configurarPantallaCompleta();
+  disableScroll();
   
   // https://www.codeleaks.io/get-url-parameter-javascript/
   // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
@@ -84,4 +85,15 @@ function configurarPantallaCompleta() {
   }
   var canvas = createCanvas(w, h);
   canvas.parent('sincentro'); 
+}
+
+// Disabling scrolling and bouncing on iOS Safari
+// https://stackoverflow.com/questions/7768269/ipad-safari-disable-scrolling-and-bounce-effect
+
+function preventDefault(e){
+  e.preventDefault();
+}
+
+function disableScroll(){
+  document.body.addEventListener('touchmove', preventDefault, { passive: false });
 }
