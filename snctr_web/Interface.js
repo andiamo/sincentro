@@ -1,12 +1,14 @@
 var Interface = function() {
-    // file:///Users/andres/code/sincentro/snctr_web/index.html?peer=8a853b72-ac5b-45d3-b03a-50a7845ce967
-
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
     // https://css-tricks.com/how-to-use-the-web-share-api/
 
+    // const urlBase = 'file:///Users/andres/code/sincentro/snctr_web/index.html';
+    // const urlBase = 'https://andrescolubri.net/sincentro/'
+    const urlBase = 'https://andrescolubri.net/sincentro-test/'
+
     
-          createButton('+').position(width - 50, 0).size(30, 30).mousePressed(async () => {
-            const urlText =  'file:///Users/andres/code/sincentro/snctr_web/index.html?peer=' + miID;
+          createButton('COMPARTIR').position(width - 150, 0).size(130, 30).mousePressed(async () => {
+            const urlText =  urlBase + '?peer=' + miID;
             print("======>", urlText);
   
             const shareData = {
@@ -38,6 +40,32 @@ var Interface = function() {
                 print('cannot share');
             }
 
+          });
+
+          var tagDiv;
+          var showingQR = false;
+          createButton('CREAR QR').position(width - 300, 0).size(130, 30).mousePressed(async () => {
+            // https://github.com/kazuhikoarase/qrcode-generator
+            
+            if (showingQR) {
+                tagDiv.remove();
+                showingQR = false;
+            } else {
+                // make the HTML tag div:
+                tagDiv = createDiv();
+                // position it:
+                tagDiv.position(width - 250, height - 250);
+
+                const urlText =  urlBase + '?peer=' + miID;
+                let qr = qrcode(0, 'L');
+                qr.addData(urlText);
+                qr.make();
+                let qrImg = qr.createImgTag(5, 20, "qr code");
+                tagDiv.html(qrImg);
+                showingQR = true;
+            }
+            
+            
           });
   }
   

@@ -5,17 +5,17 @@ var capas = [];
 var lienzo;
 var estado;
 var mensajes;
-var interface;
+var iu;
 
 function setup() {
+  configurarPantallaCompleta();
+  
   // https://www.codeleaks.io/get-url-parameter-javascript/
   // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
   this.queryString = window.location.search;
   const urlParams = new URLSearchParams(this.queryString);
   const otroID = urlParams.get('peer')
 
-  configurarPantallaCompleta();
-  
   cargarPinceles();  
   cargarColores();  
   crearCapas();
@@ -23,7 +23,7 @@ function setup() {
   lienzo = new LienzoFondo();
   estado = new Estado();
   mensajes = new Mensajes();
-  interface = new Interface();
+  iu = new Interface();
 
   iniciarP2P(otroID);
 
@@ -37,7 +37,7 @@ function draw() {
   pintarCapas();
   estado.mostrar();
   mensajes.mostrar();
-  interface.mostrar();
+  iu.mostrar();
 }
 
 function mousePressed() {
