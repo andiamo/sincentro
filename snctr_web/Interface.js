@@ -3,8 +3,8 @@ var Interface = function() {
     // https://css-tricks.com/how-to-use-the-web-share-api/
 
     // const urlBase = 'file:///Users/andres/code/sincentro/snctr_web/index.html';
-    // const urlBase = 'https://andrescolubri.net/sincentro/'
-    const urlBase = 'https://andrescolubri.net/sincentro-test/'
+    const urlBase = 'https://andrescolubri.net/sincentro/'
+    // const urlBase = 'https://andrescolubri.net/sincentro-test/'
 
     
           createButton('COMPARTIR').position(width - 150, 0).size(130, 30).mousePressed(async () => {
