@@ -9,6 +9,7 @@ var iu;
 
 var presionInicializada = false;
 var presion = -2;
+var presionEscala = 5;
 
 function setup() {
   configurarPantallaCompleta();
@@ -57,7 +58,6 @@ function mousePressed() {
 
 function mouseDragged() {
   if (mostrandoID || mostrandoPortada()) return
-  print(presion);
   estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, presion, millis(), true);
   return false;
 }
@@ -133,7 +133,7 @@ function inicializarPresion() {
         presionInicializada = true;
       }
       //console.log(force);
-      presion = force;
+      presion = presionEscala * force;
 
     }
   });
