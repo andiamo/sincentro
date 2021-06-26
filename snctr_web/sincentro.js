@@ -14,6 +14,7 @@ var presionEscala = 5;
 function setup() {
   configurarPantallaCompleta();
   disableScroll();
+  cursor(CROSS);
   
   // https://www.codeleaks.io/get-url-parameter-javascript/
   // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
