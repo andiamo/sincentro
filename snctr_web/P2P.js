@@ -5,11 +5,12 @@ var otrosIDs = null;
 var otrosEstados = null;
 var mostrandoID = false;
 
-function iniciarP2P() {
+function iniciarP2P(otroId) {
   peer = new Peer(); 
   peer.on('open', function(id) {
     miID = id;
     estado.peerID = id;
+    conectar(otroId, false, true, false);
   });
 
   otrosIDs = new HashMap();
@@ -40,15 +41,15 @@ function mostrarID() {
 }
 
 function leerID() {
-  let entrada = window.prompt('Ingresar el codigo del peer');
-  if (entrada) {
-    // Este peer intenta conectarse a otro peer usando el id ingresado por el usuario,
-    // ademas le enviara un mensaje de HOLA para generar el registro inverso.
-    conectar(entrada, false, true, false);
-  }
+  let entrada = window.prompt('Ingresar el codigo del peer');  
+  // Este peer intenta conectarse a otro peer usando el id ingresado por el usuario,
+  // ademas le enviara un mensaje de HOLA para generar el registro inverso.
+  conectar(entrada, false, true, false);  
 }
 
 function conectar(id, compartir = false, primera = false, enviar = false) {
+  if (!id) return
+
   if (!otrosIDs.containsKey(id)) {
     if (compartir) compartirNuevoPeer(id);
 
@@ -63,6 +64,7 @@ function conectar(id, compartir = false, primera = false, enviar = false) {
         enviarTrazos(conn);
       }
       if (primera) {
+        mensajes.agregar("CONECTADO")
         print("Enviando mensaje de llegada...")
         conn.send({tipo: "HOLA"});
       }
@@ -178,6 +180,6 @@ function enviarTerminarTrazo(i, u) {
 
 function enviarEntradaTeclado(kc, k) {
   for (let id of otrosIDs.keys()) {
-    otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: keyCode, tecla: k});
+    otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: kc, tecla: k});
   }
 }

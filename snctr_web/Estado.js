@@ -66,9 +66,7 @@ var Estado = function(peerID = "") {
 
   this.tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
   this.factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
-  this.factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
-
-  textFont("Helvetica", 18);
+  this.factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);  
 }
 
 Estado.prototype = {
@@ -204,8 +202,10 @@ Estado.prototype = {
       texto += ":O" + this.nivelOpacidadSeleccionado;
       texto += ":E" + this.nivelEscalaSeleccionado;
       noStroke();
-      fill(lienzo.tintaActual.generarColorComplementario());  
-      text(texto, 0, 0, width, 20);      
+      fill(lienzo.tintaActual.generarColorComplementario());
+      textFont("Helvetica", 18);
+      textAlign(LEFT, CENTER);
+      text(texto, 0, 0, width, 20);    
     }    
   },
 

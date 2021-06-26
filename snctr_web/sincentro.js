@@ -4,20 +4,31 @@ var tintasPincel = [];
 var capas = [];
 var lienzo;
 var estado;
+var mensajes;
+var iu;
 
 function setup() {
   configurarPantallaCompleta();
+  disableScroll();
   
+  // https://www.codeleaks.io/get-url-parameter-javascript/
+  // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
+  this.queryString = window.location.search;
+  const urlParams = new URLSearchParams(this.queryString);
+  const otroID = urlParams.get('peer')
+
   cargarPinceles();  
   cargarColores();  
   crearCapas();
 
   lienzo = new LienzoFondo();
   estado = new Estado();
+  mensajes = new Mensajes();
+  iu = new Interface();
 
-  iniciarP2P();
+  iniciarP2P(otroID);
 
-  mostrarPortada();
+  // mostrarPortada();
 }
 
 function draw() {
@@ -26,6 +37,8 @@ function draw() {
   lienzo.pintar();
   pintarCapas();
   estado.mostrar();
+  mensajes.mostrar();
+  iu.mostrar();
 }
 
 function mousePressed() {
@@ -72,4 +85,15 @@ function configurarPantallaCompleta() {
   }
   var canvas = createCanvas(w, h);
   canvas.parent('sincentro'); 
+}
+
+// Disabling scrolling and bouncing on iOS Safari
+// https://stackoverflow.com/questions/7768269/ipad-safari-disable-scrolling-and-bounce-effect
+
+function preventDefault(e){
+  e.preventDefault();
+}
+
+function disableScroll(){
+  document.body.addEventListener('touchmove', preventDefault, { passive: false });
 }
