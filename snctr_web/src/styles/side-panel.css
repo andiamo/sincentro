@@ -1,0 +1,93 @@
+#side-panel {
+  height: 100%;
+  width: 500px;
+  position: absolute;
+  right: -550px;
+  top: 40px;
+  background-color: #9a8f7a;
+  color: #fff;
+  opacity: 0.9;
+  z-index: 850;
+  padding: 15px;
+  overflow-y: scroll;
+  transition: all 500ms ease;
+  -webkit-box-shadow: -2px 0px 6px 0px rgba(0, 0, 0, 0.26);
+  -moz-box-shadow: -2px 0px 6px 0px rgba(0, 0, 0, 0.26);
+  box-shadow: -2px 0px 6px 0px rgba(0, 0, 0, 0.26);
+}
+
+#side-panel.active {
+  right: 0;
+}
+
+#side-panel h3,
+#side-panel h4 {
+  text-align: center;
+}
+
+#side-panel h4 {
+  margin-bottom: 30px;
+}
+
+#side-panel p {
+  padding: 0 20px;
+}
+
+#side-panel .terminos {
+  margin-top: 70px;
+  margin-bottom: 30px;
+  font-size: 18px;
+}
+
+#side-panel ul li {
+  margin: 20px 0;
+  /* list-style: none; */
+}
+
+#side-panel .btn-cont {
+  width: 100%;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#side-panel .btn {
+  text-decoration: none;
+  color: #fff;
+  background: #a7621f;
+}
+
+#side-panel .close-side {
+  text-decoration: none;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  background: #a7621f;
+  cursor: pointer;
+}
+
+#side-panel .spacer {
+  height: 120px;
+}
+
+#side-panel .node-title,
+.node-dates {
+  color: #905f2e;
+  font-weight: bold;
+}
+
+@media (max-width: 1000px) {
+  #side-panel {
+    height: 100%;
+    width: 100%;
+    display: none;
+    top: 37px;
+  }
+
+  #side-panel .close-side {
+    font-size: 20px;
+  }
+
+  #side-panel.active {
+    display: block;
+  }
+}
