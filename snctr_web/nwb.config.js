@@ -4,10 +4,10 @@ module.exports = {
   type: "web-app",
   webpack: {
     copy: [
-      {from: './assets/*.png', to: './'},
-      {from: './assets/portadas/*.jpg', to: './'},
-      {from: './favicon.ico', to: './'},
-      {from: './assets/*.ttf', to: './'}
+      // {from: './assets/*.png', to: './'},
+      // {from: './assets/portadas/*.jpg', to: './'},
+      // {from: './favicon.ico', to: './'},
+      // {from: './assets/*.ttf', to: './'}
     ],
     extra: {
       plugins: [
