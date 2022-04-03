@@ -1,4 +1,9 @@
+import p5 from "p5";
+import Filters from "./filters";
+
 const filters = new Filters();
+
+new p5(sketch, "app");
 
 var sketch = function(p) {
   var pinceles = [];
@@ -62,18 +67,21 @@ var sketch = function(p) {
     estado.iniciarTrazo(estado.indiceTrazo + 1, mouseX, mouseY, presion, millis(), true);
     return false;    
   }  
+
   p.mouseDragged = function() {
     if (mostrandoID || mostrandoPortada()) return
     estado.actualizarTrazo(estado.indiceTrazo, mouseX, mouseY, presion, millis(), true);
     return false;    
   }
+
   p.mouseReleased = function() {
     if (mostrandoID || mostrandoPortada()) return
     estado.terminarTrazo(estado.indiceTrazo, modificador() === SHIFT, true);
-    return false;    
+    return false;
   }
+
   p.keyPressed = function() {
-    if (mostrandoPortada()) return false
+    if (mostrandoPortada()) return false;
     estado.procesarTeclado(keyCode, key, true);
     return false;    
   }
