@@ -1,3 +1,12 @@
+function crearInterface() {
+}
+
+function mostrarInterface() {
+
+  
+}
+
+/*
 var Interface = function() {
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/share
     // https://css-tricks.com/how-to-use-the-web-share-api/
@@ -30,11 +39,11 @@ var Interface = function() {
                 // https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
                 print('Share API not available in this browser, will use clipboard');
                 navigator.clipboard.writeText(urlText).then(function() {
-                    /* clipboard successfully set */
+                    // clipboard successfully set
                     print('Copied to clipboard');
                     mensajes.agregar("URL COPIADO AL PORTAPAPELES")
                   }, function() {
-                    /* clipboard write failed */
+                    // clipboard write failed
                   });
             } else {
                 print('cannot share');
@@ -75,3 +84,4 @@ var Interface = function() {
     },
 
   }
+*/

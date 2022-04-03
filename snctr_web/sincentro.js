@@ -5,7 +5,7 @@ var capas = [];
 var lienzo;
 var estado;
 var mensajes;
-var iu;
+// var iu;
 
 var presionInicializada = false;
 var presion = -2;
@@ -29,11 +29,12 @@ function setup() {
   lienzo = new LienzoFondo();
   estado = new Estado();
   mensajes = new Mensajes();
-  iu = new Interface();
+  // iu = new Interface();
+  crearInterface();
 
   iniciarP2P(otroID);
 
-  // mostrarPortada();
+  mostrarPortada();
 }
 
 function draw() {
@@ -48,7 +49,7 @@ function draw() {
   pintarCapas();
   estado.mostrar();
   mensajes.mostrar();
-  iu.mostrar();
+  mostrarInterface();
 }
 
 function mousePressed() {
