@@ -1,8 +1,46 @@
 body {
   padding: 0px;
   margin: 0px;
+  position: relative;
+  overflow: hidden;  
 }
 
 a {
   color: #00B7FF;
+}
+
+/* SKETCH */
+#sincentro {
+  width: 100%;
+}
+
+/* CONTROLS */
+.controls-container {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  background-color: #66cae9;
+  border-bottom: 1px solid #474747;
+  padding: 20px;
+  top: -90px;
+  transition: top 300ms ease-in;
+  /* padding: 1; */
+}
+
+.controls-container.active {
+  top: 0;
+}
+
+.slide-container {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.controls-switcher {
+  border: none;
+  position: absolute;
+  bottom: -44px;
+  padding: 5px 10px;
+  background-color: #66cae9;
+  cursor: pointer;
 }

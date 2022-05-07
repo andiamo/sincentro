@@ -115,6 +115,8 @@ function recibirData(conn, data) {
     obtenerEstado(conn.peer).terminarTrazo(data["indice"], data["unico"], false);
   } else if (data["tipo"] === "ENTRADA_TECLADO") {
     obtenerEstado(conn.peer).procesarTeclado(data["codigo"], data["tecla"], false);
+  } else if (data["tipo"] === "ENTRADA_INTERFACE") {
+    obtenerEstado(conn.peer).procesarInterface(data["variable"], data["valor"], false);
   } else if (data["tipo"] === "TRAZO_COMPLETO") {
     sketch.print("Recibiendo trazo completo de ", conn.peer);
     obtenerEstado(conn.peer).agregarTrazoCompleto(data);
@@ -183,5 +185,11 @@ function enviarTerminarTrazo(i, u) {
 function enviarEntradaTeclado(kc, k) {
   for (let id of otrosIDs.keys()) {
     otrosIDs.get(id).send({tipo: "ENTRADA_TECLADO", codigo: kc, tecla: k});
+  }
+}
+
+function enviarEntradaInterface(vr, vl) {
+  for (let id of otrosIDs.keys()) {
+    otrosIDs.get(id).send({tipo: "ENTRADA_INTERFACE", variable: vr, valor: vl});
   }
 }

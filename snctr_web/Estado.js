@@ -192,27 +192,27 @@ Estado.prototype = {
   },
 
   mostrar: function() {
-    let p = this.p;
-    if (this.mostrarTextoDeEstado && !mostrandoID) {
-      let texto = "";
-      texto = "C" + (this.capaSeleccionada + 1);
-      if (capas[this.capaSeleccionada].opacidad.valor === 0) texto += "?";       
-      if (this.todasCapasSeleccionadas) texto += "!";
-      texto += ":" + pinceles[this.pincelSeleccionado].nombre;
-      texto += ":f" + tintasFondo[this.tintaFondoSeleccionada].nombre;
-      texto += ":f" + this.tiempoTransicionFondoSeleccionado;
-      texto += ":p" + tintasPincel[this.tintaPincelSeleccionada].nombre;
-      texto += ":B" + this.tiempoBorradoSeleccionado;  
-      texto += ":R" + p.int(this.repetirTrazos);
-      texto += ":U" + p.int(this.unirTrazos);
-      texto += ":O" + this.nivelOpacidadSeleccionado;
-      texto += ":E" + this.nivelEscalaSeleccionado;
-      p.noStroke();
-      p.fill(lienzo.tintaActual.generarColorComplementario());
-      p.textFont("Helvetica", 18);
-      p.textAlign(p.LEFT, p.CENTER);
-      p.text(texto, 0, 0, p.width, 20);    
-    }    
+    // let p = this.p;
+    // if (this.mostrarTextoDeEstado && !mostrandoID) {
+    //   let texto = "";
+    //   texto = "C" + (this.capaSeleccionada + 1);
+    //   if (capas[this.capaSeleccionada].opacidad.valor === 0) texto += "?";       
+    //   if (this.todasCapasSeleccionadas) texto += "!";
+    //   texto += ":" + pinceles[this.pincelSeleccionado].nombre;
+    //   texto += ":f" + tintasFondo[this.tintaFondoSeleccionada].nombre;
+    //   texto += ":f" + this.tiempoTransicionFondoSeleccionado;
+    //   texto += ":p" + tintasPincel[this.tintaPincelSeleccionada].nombre;
+    //   texto += ":B" + this.tiempoBorradoSeleccionado;  
+    //   texto += ":R" + p.int(this.repetirTrazos);
+    //   texto += ":U" + p.int(this.unirTrazos);
+    //   texto += ":O" + this.nivelOpacidadSeleccionado;
+    //   texto += ":E" + this.nivelEscalaSeleccionado;
+    //   p.noStroke();
+    //   p.fill(lienzo.tintaActual.generarColorComplementario());
+    //   p.textFont("Helvetica", 18);
+    //   p.textAlign(p.LEFT, p.CENTER);
+    //   p.text(texto, 0, 0, p.width, 20);    
+    // }    
   },
 
   procesarTeclado: function(keyCode, key, enviar = false) {
@@ -290,15 +290,15 @@ Estado.prototype = {
       // Funciones que solo se llevan a cabo cuando esta funcion es llamada desde el peer local:
 
       // 1. Mostramos/leemos el ID del peer
-      if (listaContieneTecla(key, teclasMostrarID)) {
+      if (listaContieneTecla(p.key, teclasMostrarID)) {
         mostrarID();
-      } else if (listaContieneTecla(key, teclasPedirID)) {
+      } else if (listaContieneTecla(p.key, teclasPedirID)) {
         leerID();
       }
 
       // 2. Cambiamos el color del fondo
       for (let t of tintasFondo) {
-        if (listaContieneTecla(key, t.teclas)) {
+        if (listaContieneTecla(p.key, t.teclas)) {
           this.tintaFondoSeleccionada = t.indice;
           lienzo.cambiarColor(t);
         }
@@ -319,5 +319,18 @@ Estado.prototype = {
 
       enviarEntradaTeclado(keyCode, key);
     }      
+  },
+
+  procesarInterface: function(variable, valor) {
+    if (variable === "pincel_seleccionado") {
+      this.pincelSeleccionado = valor;
+    }
+  },
+
+  setearPincel: function(indice, enviar = false) {
+    this.pincelSeleccionado = indice;
+    if (enviar) {
+      enviarEntradaInterface("pincel_seleccionado", indice);
+    }
   }
 }

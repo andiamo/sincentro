@@ -5,12 +5,43 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SINCENTRO</title>
-
     <link rel="stylesheet" type="text/css" href="style.css">
+
+
+  </head>
+
+  <body>
+    <!-- CONTROLS -->
+    <div class="controls-container">
+      <div class="slider-container">
+        <label>Pincel</label>
+        <input
+          type="range"
+          min="0"
+          max="9"
+          value="0"
+          class="slider"
+          id="pincel-input"
+        />
+      </div>
+
+      <div>
+        <button class="controls-switcher" id="controls-btn">Controles</button>
+      </div>
+    </div>
+
+    <div id="sincentro"></div>
+
     <script language="javascript" type="text/javascript" src="assets/js/p5.min.js"></script>
+    <script language="javascript" type="text/javascript" src="assets/js/redux.min.js"></script>
     <script language="javascript" type="text/javascript" src="assets/js/peerjs.min.js"></script>
     <script language="javascript" type="text/javascript" src="assets/js/qrcode.min.js"></script>
     <script language="javascript" type="text/javascript" src="assets/js/pressure.min.js"></script>
+
+    <script language="javascript" type="text/javascript" src="actions/controls.js"></script>
+    <script language="javascript" type="text/javascript" src="reducers/controls.js" ></script>
+    <script language="javascript" type="text/javascript" src="store.js" ></script>
+
     <script language="javascript" type="text/javascript" src="Trazos.js"></script>
     <script language="javascript" type="text/javascript" src="Pinceles.js"></script>
     <script language="javascript" type="text/javascript" src="Interpolacion.js"></script>
@@ -24,10 +55,5 @@
     <script language="javascript" type="text/javascript" src="Mensajes.js"></script>
     <script language="javascript" type="text/javascript" src="Interface.js"></script>
     <script language="javascript" type="text/javascript" src="sincentro.js"></script>
-  </head>
-
-  <body>
-    <div id="sincentro"></div>
   </body>
-
 </html>

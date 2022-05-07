@@ -5,11 +5,39 @@ var capas = [];
 var lienzo;
 var estado;
 var mensajes;
-// var iu;
 
 var presionInicializada = false;
 var presion = -2;
 var presionEscala = 5;
+
+// --- Subscribers --- //
+var subscribePincel = observe(
+  // selection of the state
+  function (state) {
+    return state.pincel;
+  },
+  // onChange trigger
+  function (state) {
+    if (estado) {
+      estado.setearPincel(state.value);
+    }    
+  }
+);
+
+// --- DOM Elements actions --- //
+// Slider
+var sliderInput = document.getElementById("pincel-input");
+sliderInput.oninput = function () {
+  var sliderValue = this.value;
+  store.dispatch(updatePincel(sliderValue));
+};
+
+// Controls switcher
+var controlsBTN = document.getElementById("controls-btn");
+controlsBTN.onclick = function () {
+  var controlsContainer = document.querySelector(".controls-container");
+  controlsContainer.classList.toggle("active");
+};
 
 // --- Sketch --- //
 var sketch = function (p) {
@@ -37,11 +65,11 @@ var sketch = function (p) {
   
     iniciarP2P(p, otroID);
   
-    mostrarPortada(p);    
+    // mostrarPortada(p);    
   };
 
   p.draw = function () {
-    if (mostrandoPortada()) return
+    // if (mostrandoPortada()) return
 
     if (!presionInicializada) {
       p.inicializarPresion();
@@ -52,30 +80,29 @@ var sketch = function (p) {
     pintarCapas();
     estado.mostrar();
     mensajes.mostrar();
-    mostrarInterface();
-  
+    // mostrarInterface();
   };
 
   p.mousePressed = function() {
-    if (mostrandoID || mostrandoPortada()) return
+    if (mostrandoID) return
     estado.iniciarTrazo(estado.indiceTrazo + 1, p.mouseX, p.mouseY, presion, p.millis(), true);
     return false;
   };  
 
   p.mouseDragged = function() {
-    if (mostrandoID || mostrandoPortada()) return
+    if (mostrandoID) return
     estado.actualizarTrazo(estado.indiceTrazo, p.mouseX, p.mouseY, presion, p.millis(), true);
     return false;
   };
   
   p.mouseReleased = function() {
-    if (mostrandoID || mostrandoPortada()) return
+    if (mostrandoID) return
     estado.terminarTrazo(estado.indiceTrazo, modificador(p) === p.SHIFT, true);
     return false;
   };
   
   p.keyPressed = function() {
-    if (mostrandoPortada()) return false
+    // if (mostrandoPortada()) return false
     estado.procesarTeclado(p.keyCode, p.key, true);
     return false;
   };
