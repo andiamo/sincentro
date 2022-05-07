@@ -4,7 +4,10 @@ function crearToque(x, y, p, t, primero) {
   return toque;
 }
 
-var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = null, factorOpacidad = 0, factorEscala = 0, rep = false, t = 0) {
+var Trazo = function(p = null, indice = 0, peer = "", capa = null, pincel = null, tinta = null, factorOpacidad = 0, factorEscala = 0, rep = false, t = 0) {
+  this.p = p;
+  console.log("CREATING TRAZO " + p);
+
   this.indice = indice;
   this.peer = peer;
 
@@ -27,11 +30,13 @@ var Trazo = function(indice = 0, peer = "", capa = null, pincel = null, tinta = 
   this.duracionBorrado = 0;
   this.indicePrevio = 0;
 
-  this.tiempoInterno0 = millis() - this.tiempoComienzo;
+  this.tiempoInterno0 = p.millis() - this.tiempoComienzo;
 }
 
 Trazo.prototype = {
   desempaquetar: function(data) {
+    let p = this.p;
+
     this.indice = data["indice"];
     this.peer = data["peer"];
 
@@ -40,7 +45,7 @@ Trazo.prototype = {
     this.tinta = tintasPincel[data["indice_tinta"]];
 
     let datosToques = data["toques"];
-    let n = int(datosToques.length / 6);
+    let n = p.int(datosToques.length / 6);
     for (let i = 0; i < n; i++) {
       let x = datosToques[6 * i + 0];
       let y = datosToques[6 * i + 1];
@@ -68,10 +73,12 @@ Trazo.prototype = {
     this.duracionBorrado = data["duracion_borrado"];
     this.indicePrevio = data["indice_previo"];
 
-    this.tiempoInterno0 = millis() - this.tiempoComienzo;
+    this.tiempoInterno0 = p.millis() - this.tiempoComienzo;
   },
 
   empaquetar: function() {
+    let p = this.p;
+
     let data = {};
 
     data["indice"] = this.indice;
@@ -83,7 +90,7 @@ Trazo.prototype = {
 
     let datosToques = [];
     for (let toque of this.toques) {
-      datosToques.push(toque.x, toque.y, toque.p, toque.t, int(toque.primero), int(toque.ultimo));
+      datosToques.push(toque.x, toque.y, toque.p, toque.t, p.int(toque.primero), p.int(toque.ultimo));
     }
     data["toques"] = datosToques;
 
@@ -105,8 +112,10 @@ Trazo.prototype = {
   },
 
   cerrate: function(unico, duracionBorrado) {
+    let p = this.p;
+
     this.cerrado = true;
-    this.duracionBorrado = int(duracionBorrado);
+    this.duracionBorrado = p.int(duracionBorrado);
     let ultimoToque = this.toques[this.toques.length - 1];
     let fakeToque = new Toque(ultimoToque.x, ultimoToque.y, ultimoToque.p, ultimoToque.t + this.duracionBorrado);
     this.tiempoBorrado = ultimoToque.t;
@@ -117,12 +126,14 @@ Trazo.prototype = {
 
   dibujate: function(opacidadCapa) {
     if (this.factorOpacidad === 0 || this.factorEscala === 0) return;
+
+    let p = this.p;
     
     let indice = this.toques.length - 1;
     let factorBorrado = 1;
     if (this.cerrado && (this.repetir || this.borrando)) {
-      let tiempoInterno = millis() - this.tiempoInterno0;
-      let t = int(tiempoInterno - this.tiempoComienzo) % int(this.tiempoFinal - this.tiempoComienzo + 1);
+      let tiempoInterno = p.millis() - this.tiempoInterno0;
+      let t = p.int(tiempoInterno - this.tiempoComienzo) % p.int(this.tiempoFinal - this.tiempoComienzo + 1);
       let indiceCorriente = this.buscarIndice(t);
 
       if (this.repetir) {
@@ -131,7 +142,7 @@ Trazo.prototype = {
       }
       
       if (this.tiempoBorrado - this.tiempoComienzo <= t) {
-        factorBorrado = 1 - float(t - this.tiempoBorrado + this.tiempoComienzo) / this.duracionBorrado;
+        factorBorrado = 1 - p.float(t - this.tiempoBorrado + this.tiempoComienzo) / this.duracionBorrado;
       }
       
       if (this.borrando && (indiceCorriente < this.indicePrevio || factorBorrado < 0.01)) {
@@ -143,7 +154,7 @@ Trazo.prototype = {
       this.indicePrevio = indiceCorriente;
     }
 
-    let opacidad = constrain(opacidadCapa * this.factorOpacidad * factorBorrado * 255, 1, 255);
+    let opacidad = p.constrain(opacidadCapa * this.factorOpacidad * factorBorrado * 255, 1, 255);
     this.pincel.pintar(this.toques.slice(0, indice + 1), this.tinta.generarColor(opacidad), this.factorEscala);
   },
   
@@ -165,10 +176,11 @@ Trazo.prototype = {
   },
   
   buscarIndice: function(tiempo) {
+    let p = this.p;
     let n = this.toques.length;
     let mini = 0;
     let maxi = n;
-    let idx = int(mini + (maxi - mini) / 2);
+    let idx = p.int(mini + (maxi - mini) / 2);
     let iter = 0;
     while (iter < n) {
       let t0 = this.toques[idx].t - this.tiempoComienzo;
@@ -185,7 +197,7 @@ Trazo.prototype = {
       } else {
         mini = idx;
       }
-      idx = int(mini + (maxi - mini) / 2);
+      idx = p.int(mini + (maxi - mini) / 2);
       iter++; 
     }
     return idx;

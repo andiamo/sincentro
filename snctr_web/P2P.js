@@ -1,3 +1,4 @@
+var sketch = null;
 var peer = null;
 
 var miID = "";
@@ -5,7 +6,8 @@ var otrosIDs = null;
 var otrosEstados = null;
 var mostrandoID = false;
 
-function iniciarP2P(otroId) {
+function iniciarP2P(p, otroId) {
+  sketch = p;
   peer = new Peer(); 
   peer.on('open', function(id) {
     miID = id;
@@ -22,21 +24,21 @@ function iniciarP2P(otroId) {
     });
   });
   peer.on('disconnected', function() {
-    print("Desconectado del signalling server");
+    sketch.print("Desconectado del signalling server");
   });
   peer.on('error', function(err) {
-    print("Hubo un error", err);
+    sketch.print("Hubo un error", err);
   });
 }
 
 function mostrarID() {
   mostrandoID = !mostrandoID;
   if (mostrandoID) {
-    div = createDiv(miID);
+    div = sketch.createDiv(miID);
     div.position(0, 0);
     div.size(300, 20);
   } else {
-    removeElements();
+    sketch.removeElements();
   }
 }
 
@@ -58,25 +60,25 @@ function conectar(id, compartir = false, primera = false, enviar = false) {
     conn.on('open', function() {
       if (compartir) compartirViejosPeers(conn);
       otrosIDs.put(id, conn);
-      print("AGREGAR peer", conn.peer, otrosIDs.size());
+      sketch.print("AGREGAR peer", conn.peer, otrosIDs.size());
       if (enviar) {
         enviarEstado(conn);
         enviarTrazos(conn);
       }
       if (primera) {
         mensajes.agregar("CONECTADO")
-        print("Enviando mensaje de llegada...")
+        sketch.print("Enviando mensaje de llegada...")
         conn.send({tipo: "HOLA"});
       }
     });
 
     conn.on('close', function() {
       otrosIDs.remove(conn.peer);
-      print("REMOVER peer", conn.peer, otrosIDs.size());
+      sketch.print("REMOVER peer", conn.peer, otrosIDs.size());
     });
 
   } else {
-    print("Ya estoy conectado con", id);
+    sketch.print("Ya estoy conectado con", id);
   }
 }
 
@@ -114,13 +116,13 @@ function recibirData(conn, data) {
   } else if (data["tipo"] === "ENTRADA_TECLADO") {
     obtenerEstado(conn.peer).procesarTeclado(data["codigo"], data["tecla"], false);
   } else if (data["tipo"] === "TRAZO_COMPLETO") {
-    print("Recibiendo trazo completo de ", conn.peer);
+    sketch.print("Recibiendo trazo completo de ", conn.peer);
     obtenerEstado(conn.peer).agregarTrazoCompleto(data);
   } else if (data["tipo"] === "TRAZO_INCOMPLETO") {
-    print("Recibiendo trazo en progreso de ", conn.peer);
+    sketch.print("Recibiendo trazo en progreso de ", conn.peer);
     obtenerEstado(conn.peer).agregarTrazoIncompleto(data);
   } else if (data["tipo"] === "ESTADO_COMPLETO") {
-    print("Recibiendo estado de", conn.peer);
+    sketch.print("Recibiendo estado de", conn.peer);
     obtenerEstado(conn.peer).desempaquetar(data);
   }
 }
@@ -129,21 +131,21 @@ function obtenerEstado(id) {
   if (otrosEstados.containsKey(id)) {
     return otrosEstados.get(id);
   } else {
-    let nuevoEstado = new Estado(id);
+    let nuevoEstado = new Estado(sketch, id);
     otrosEstados.put(id, nuevoEstado);
     return nuevoEstado;
   }
 }
 
 function enviarEstado(conn) {
-  print("Enviando estado al peer", conn.peer);
+  sketch.print("Enviando estado al peer", conn.peer);
   let data = estado.empaquetar();
   data["tipo"] = "ESTADO_COMPLETO";
   conn.send(data);  
 }
 
 function enviarTrazos(conn) {
-  print("Enviando trazos completos al peer", conn.peer);
+  sketch.print("Enviando trazos completos al peer", conn.peer);
   for (let capa of capas) {
     for (let trazo of capa.trazos) {
       if (estado.peerID === trazo.peer) {

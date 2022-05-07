@@ -1,12 +1,12 @@
 // Nuevos pinceles se pueden probar en el editor online de p5.js usando este bosquejo de ejemplo:
 // https://editor.p5js.org/codeanticode/sketches/EEURt9RtI
 
-function cargarPinceles() {
+function cargarPinceles(p) {
   pinceles = [];
-  pinceles.push(new PincelLinea(0, "LIN", ['Q', 'q']));
-  pinceles.push(new PincelCinta(1, "CIN", ['W', 'w']));
-  pinceles.push(new PincelBola(2, "BOL", ['E', 'e']));
-  pinceles.push(new PincelAnimado(3, "ANI", ['R', 'r']));
+  pinceles.push(new PincelLinea(p, 0, "LIN", ['Q', 'q']));
+  pinceles.push(new PincelCinta(p, 1, "CIN", ['W', 'w']));
+  pinceles.push(new PincelBola(p, 2, "BOL", ['E', 'e']));
+  pinceles.push(new PincelAnimado(p, 3, "ANI", ['R', 'r']));
 }
 
 function distintos(ptoque, toque) {
@@ -22,7 +22,8 @@ function obtenerListaTeclasPinceles() {
   return teclas;
 }
 
-var PincelLinea = function(indice, nombre, teclas) { 
+var PincelLinea = function(p, indice, nombre, teclas) { 
+  this.p = p;
   this.indice = indice;
   this.nombre = nombre;
   this.teclas = teclas;
@@ -30,23 +31,25 @@ var PincelLinea = function(indice, nombre, teclas) {
 
 PincelLinea.prototype = {  
   nuevoPincel: function() {
-    return new PincelLinea(this.indice, this.nombre, this.teclas);
+    return new PincelLinea(this.p, this.indice, this.nombre, this.teclas);
   },
   
   pintar: function(toques, tinta, escala) {
-    stroke(tinta);
-    strokeWeight(escala);
+    let p = this.p;
+    p.stroke(tinta);
+    p.strokeWeight(escala);
     let ptoque = null;
     for (let toque of toques) {
       if (distintos(ptoque, toque) && !toque.primero) {        
-        line(ptoque.x, ptoque.y, toque.x, toque.y);      
+        p.line(ptoque.x, ptoque.y, toque.x, toque.y);      
       }
       ptoque = toque;
     }
   }
 }
 
-var PincelCinta = function(indice, nombre, teclas) { 
+var PincelCinta = function(p, indice, nombre, teclas) {
+  this.p = p;
   this.indice = indice;
   this.nombre = nombre;
   this.teclas = teclas;
@@ -54,23 +57,24 @@ var PincelCinta = function(indice, nombre, teclas) {
   
 PincelCinta.prototype = {  
   nuevoPincel: function() {
-    return new PincelCinta(this.indice, this.nombre, this.teclas);
+    return new PincelCinta(this.p, this.indice, this.nombre, this.teclas);
   },
   
   pintar: function(toques, tinta, escala) {
-    noStroke();
-    fill(tinta);
+    let p = this.p;
+    p.noStroke();
+    p.fill(tinta);
     let w = 0;
     let ptoque = null;
     for (let toque of toques) {
       if (toque.primero) {
-        if (ptoque !== null) endShape();        
-        beginShape(QUAD_STRIP);
+        if (ptoque !== null) p.endShape();        
+        p.beginShape(p.QUAD_STRIP);
         w = 0;
       } else if (distintos(ptoque, toque)) { 
         let dx = toque.x - ptoque.x;
         let dy = toque.y - ptoque.y;
-        let d2 = sqrt(sq(dx) + sq(dy));
+        let d2 = p.sqrt(p.sq(dx) + p.sq(dy));
         let nx = 0;
         let ny = 0;        
         if (!toque.ultimo) {
@@ -78,16 +82,17 @@ PincelCinta.prototype = {
           ny = -dx / d2;          
         }
         w = 0.9 * w + 0.1 * toque.p;
-        vertex(toque.x + nx * w * escala, toque.y + ny * w * escala);
-        vertex(toque.x - nx * w * escala, toque.y - ny * w * escala);
+        p.vertex(toque.x + nx * w * escala, toque.y + ny * w * escala);
+        p.vertex(toque.x - nx * w * escala, toque.y - ny * w * escala);
       }      
       ptoque = toque;
     }
-    endShape();
+    p.endShape();
   }
 }
 
-var PincelBola = function(indice, nombre, teclas) { 
+var PincelBola = function(p, indice, nombre, teclas) { 
+  this.p = p;
   this.indice = indice;
   this.nombre = nombre;
   this.teclas = teclas;
@@ -95,48 +100,51 @@ var PincelBola = function(indice, nombre, teclas) {
   
 PincelBola.prototype = {  
   nuevoPincel: function() {
-    return new PincelBola(this.indice, this.nombre, this.teclas);
+    return new PincelBola(this.p, this.indice, this.nombre, this.teclas);
   },
   
   pintar: function(toques, tinta, escala) {
+    let p = this.p;
     if (1 < toques.length) {
-      strokeCap(ROUND);
+      p.strokeCap(p.ROUND);
       let toque = toques[toques.length - 1];
       let ptoque = toques[toques.length - 2];
       let r = 2 * toque.p * escala;
-      stroke(tinta);
-      noFill();      
-      strokeWeight(r);
-      line(ptoque.x, ptoque.y, toque.x, toque.y);
+      p.stroke(tinta);
+      p.noFill();      
+      p.strokeWeight(r);
+      p.line(ptoque.x, ptoque.y, toque.x, toque.y);
     } else if (toques.length === 1) {
-      noStroke();
-      fill(tinta);      
+      p.noStroke();
+      p.fill(tinta);      
       let toque = toques[toques.length - 1];
       let r = 5 * escala;
-      ellipse(toque.x, toque.y, r, r);
+      p.ellipse(toque.x, toque.y, r, r);
    }
   }
 }
 
-var PincelAnimado = function(indice, nombre, teclas) { 
+var PincelAnimado = function(p, indice, nombre, teclas) { 
+  this.p = p;
   this.indice = indice;
   this.nombre = nombre;
   this.teclas = teclas;
-  this.offset = random(10);
+  this.offset = p.random(10);
 }
   
 PincelAnimado.prototype = {  
   nuevoPincel: function() {
-    return new PincelAnimado(this.indice, this.nombre, this.teclas);
+    return new PincelAnimado(this.p, this.indice, this.nombre, this.teclas);
   },
   
   pintar: function(toques, tinta, escala) {
+    let p = this.p;
     if (0 < toques.length) {
-      noStroke();
-      fill(tinta);      
+      p.noStroke();
+      p.fill(tinta);      
       let toque = toques[toques.length - 1];
-      let r = 20 * escala * noise(this.offset + millis() / 2500.0);
-      ellipse(toque.x, toque.y, r, r);      
+      let r = 20 * escala * p.noise(this.offset + p.millis() / 2500.0);
+      p.ellipse(toque.x, toque.y, r, r);      
     }
   }
 }

@@ -1,6 +1,6 @@
-function crearCapas() {
+function crearCapas(p) {
   for (let i = 0; i < MAX_CAPAS; i++) {
-    capas.push(new CapaDibujo(i));
+    capas.push(new CapaDibujo(p, i));
   }
 }
 
@@ -13,7 +13,8 @@ function pintarCapas() {
   }
 }
 
-var LienzoFondo = function() {
+var LienzoFondo = function(p) {
+  this.p = p;
   this.tintaActual = tintasFondo[0];
   this.tintaPrevia = null;
   this.tiempoCambio = 0;
@@ -23,9 +24,10 @@ var LienzoFondo = function() {
 
 LienzoFondo.prototype = {  
   pintar: function() {
+    let p = this.p;
     let colorFondo;
     if (this.cambiando) {
-      let t = millis();
+      let t = p.millis();
       if (t - this.tiempoCambio < this.duracionCambio) {
         let f = (t - this.tiempoCambio) / this.duracionCambio;      
         colorFondo = this.tintaPrevia.interpolarHacia(this.tintaActual, f);
@@ -35,22 +37,23 @@ LienzoFondo.prototype = {
     } else {
       colorFondo = this.tintaActual.generarColor();  
     }
-    background(colorFondo);    
+    p.background(colorFondo);    
   },
   
   cambiarColor: function(tinta) {    
     this.tintaPrevia = this.tintaActual;
     this.tintaActual = tinta;
-    this.tiempoCambio = millis();
+    this.tiempoCambio = this.p.millis();
     this.cambiando = true;
     this.duracionCambio = tiemposTransicionFondo[estado.tiempoTransicionFondoSeleccionado];
   }
 }
 
-var CapaDibujo = function(indice) {
+var CapaDibujo = function(p, indice) {
+  this.p = p;
   this.indice = indice;
   this.trazos = [];  
-  this.opacidad = new NumeroInterpolado(1);
+  this.opacidad = new NumeroInterpolado(p, 1);
 }
 
 CapaDibujo.prototype = {  

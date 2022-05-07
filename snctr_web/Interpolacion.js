@@ -1,4 +1,5 @@
-var NumeroInterpolado = function(v) {
+var NumeroInterpolado = function(p, v) {
+  this.p = p;
   this.atraccion = 0.1;
   this.atenuacion = 0.5;
   this.umbral = 0.01;
@@ -18,7 +19,7 @@ NumeroInterpolado.prototype = {
       this.velocidad = (this.velocidad + this.aceleracion) * this.atenuacion;
       this.valor += this.velocidad;
       this.aceleracion = 0;
-      if (abs(this.objetivo - this.valor) >= this.umbral) {
+      if (this.p.abs(this.objetivo - this.valor) >= this.umbral) {
         return true;
       }
       this.valor = this.objetivo;
@@ -29,7 +30,7 @@ NumeroInterpolado.prototype = {
 
   establecerObjetivo: function(obj) {
     this.objetivo = obj;
-    this.interpolando = abs(this.objetivo - this.valor) >= this.umbral;
+    this.interpolando = this.p.abs(this.objetivo - this.valor) >= this.umbral;
     if (!this.interpolando) this.valor = this.objetivo;
   }
 }

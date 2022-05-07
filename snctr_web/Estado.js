@@ -28,11 +28,11 @@ function indiceDeTecla(tecla, teclas) {
   return -1;
 }
 
-function modificador() {
+function modificador(p) {
   let mod = -1;
-  if (isKeyPressed) {
-    if (keyCode === SHIFT) {
-      mod = SHIFT;
+  if (p.isKeyPressed) {
+    if (p.keyCode === p.SHIFT) {
+      mod = p.SHIFT;
     }
   }
   return mod;
@@ -43,7 +43,9 @@ function actualizarEstados() {
   for (let otro of otrosEstados.values()) otro.actualizar();
 }
 
-var Estado = function(peerID = "") {
+var Estado = function(p, peerID = "") {
+  this.p = p;
+
   this.peerID = peerID;
 
   this.nuevoTrazo = null;
@@ -64,9 +66,9 @@ var Estado = function(peerID = "") {
   this.nivelEscalaSeleccionado = 4;
   this.tiempoTransicionFondoSeleccionado = 4;
 
-  this.tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
-  this.factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
-  this.factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);  
+  this.tiempoBorradoTrazos = new NumeroInterpolado(p, tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
+  this.factorOpacidadTrazos = new NumeroInterpolado(p, nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
+  this.factorEscalaTrazos = new NumeroInterpolado(p, nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);  
 }
 
 Estado.prototype = {
@@ -89,9 +91,10 @@ Estado.prototype = {
     this.nivelEscalaSeleccionado = data["nivel_escala_seleccionado"];
     this.tiempoTransicionFondoSeleccionado = data["tiempo_transicion_fondo_seleccionado"];
 
-    this.tiempoBorradoTrazos = new NumeroInterpolado(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
-    this.factorOpacidadTrazos = new NumeroInterpolado(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
-    this.factorEscalaTrazos = new NumeroInterpolado(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);    
+    let p = this.p;
+    this.tiempoBorradoTrazos = new NumeroInterpolado(p, tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
+    this.factorOpacidadTrazos = new NumeroInterpolado(p, nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
+    this.factorEscalaTrazos = new NumeroInterpolado(p, nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);    
   },
 
   empaquetar: function() {
@@ -128,7 +131,8 @@ Estado.prototype = {
     if (!this.registrandoTrazo) {
       this.registrandoTrazo = true;
       this.indiceTrazo = i;
-      this.nuevoTrazo = new Trazo(this.indiceTrazo, this.peerID,
+      this.nuevoTrazo = new Trazo(this.p, 
+                                  this.indiceTrazo, this.peerID,
                                   capas[this.capaSeleccionada],
                                   pinceles[this.pincelSeleccionado].nuevoPincel(),
                                   tintasPincel[this.tintaPincelSeleccionada],
@@ -176,17 +180,19 @@ Estado.prototype = {
   agregarTrazoCompleto: function(data) {
     let capa = capas[data["indice_capa"]];
     if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
-    let trazo = new Trazo();
+    console.log("THIS IS THE SKETCH OBJECT " + this.p);
+    let trazo = new Trazo(this.p);
     trazo.desempaquetar(data);
     capa.trazos.push(trazo);
   },
 
   agregarTrazoIncompleto: function(data) {
-    this.nuevoTrazo = new Trazo();
+    this.nuevoTrazo = new Trazo(this.p);
     this.nuevoTrazo.desempaquetar(data);
   },
 
   mostrar: function() {
+    let p = this.p;
     if (this.mostrarTextoDeEstado && !mostrandoID) {
       let texto = "";
       texto = "C" + (this.capaSeleccionada + 1);
@@ -197,42 +203,43 @@ Estado.prototype = {
       texto += ":f" + this.tiempoTransicionFondoSeleccionado;
       texto += ":p" + tintasPincel[this.tintaPincelSeleccionada].nombre;
       texto += ":B" + this.tiempoBorradoSeleccionado;  
-      texto += ":R" + int(this.repetirTrazos);
-      texto += ":U" + int(this.unirTrazos);
+      texto += ":R" + p.int(this.repetirTrazos);
+      texto += ":U" + p.int(this.unirTrazos);
       texto += ":O" + this.nivelOpacidadSeleccionado;
       texto += ":E" + this.nivelEscalaSeleccionado;
-      noStroke();
-      fill(lienzo.tintaActual.generarColorComplementario());
-      textFont("Helvetica", 18);
-      textAlign(LEFT, CENTER);
-      text(texto, 0, 0, width, 20);    
+      p.noStroke();
+      p.fill(lienzo.tintaActual.generarColorComplementario());
+      p.textFont("Helvetica", 18);
+      p.textAlign(p.LEFT, p.CENTER);
+      p.text(texto, 0, 0, p.width, 20);    
     }    
   },
 
   procesarTeclado: function(keyCode, key, enviar = false) {
-    if (keyCode === LEFT_ARROW) {
-      this.nivelOpacidadSeleccionado = constrain(this.nivelOpacidadSeleccionado - 1, 0, 9);
+    let p = this.p;
+    if (keyCode === p.LEFT_ARROW) {
+      this.nivelOpacidadSeleccionado = p.constrain(this.nivelOpacidadSeleccionado - 1, 0, 9);
       this.factorOpacidadTrazos.establecerObjetivo(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
-    } else if (keyCode === RIGHT_ARROW) {
-      this.nivelOpacidadSeleccionado = constrain(this.nivelOpacidadSeleccionado + 1, 0, 9);
+    } else if (keyCode === p.RIGHT_ARROW) {
+      this.nivelOpacidadSeleccionado = p.constrain(this.nivelOpacidadSeleccionado + 1, 0, 9);
       this.factorOpacidadTrazos.establecerObjetivo(nivelesOpacidadTrazos[this.nivelOpacidadSeleccionado]);
-    } else if (keyCode === DOWN_ARROW) {
-      this.nivelEscalaSeleccionado = constrain(this.nivelEscalaSeleccionado - 1, 0, 9);
+    } else if (keyCode === p.DOWN_ARROW) {
+      this.nivelEscalaSeleccionado = p.constrain(this.nivelEscalaSeleccionado - 1, 0, 9);
       this.factorEscalaTrazos.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
-    } else if (keyCode === UP_ARROW) {
-      this.nivelEscalaSeleccionado = constrain(this.nivelEscalaSeleccionado + 1, 0, 9);
+    } else if (keyCode === p.UP_ARROW) {
+      this.nivelEscalaSeleccionado = p.constrain(this.nivelEscalaSeleccionado + 1, 0, 9);
       this.factorEscalaTrazos.establecerObjetivo(nivelesEscalaTrazos[this.nivelEscalaSeleccionado]);
-    } else if (keyCode === DELETE || keyCode === BACKSPACE) {
+    } else if (keyCode === p.DELETE || keyCode === p.BACKSPACE) {
       if (this.todasCapasSeleccionadas) {
         for (let capa of capas) capa.borrarTrazos(this.peerID);
       } else {
         capas[this.capaSeleccionada].borrarTrazos(this.peerID);
       }
-    } else if (keyCode === ENTER || keyCode === RETURN) {
+    } else if (keyCode === p.ENTER || keyCode === p.RETURN) {
       this.mostrarTextoDeEstado = !this.mostrarTextoDeEstado;
     } else if (key === ' ') {
       this.repetirTrazos = !this.repetirTrazos;
-    }  else if (keyCode === TAB) {
+    }  else if (keyCode === p.TAB) {
       this.unirTrazos = !this.unirTrazos;
       if (!this.unirTrazos) {
         this.terminarTrazo(this.indiceTrazo, false, enviar);
@@ -258,14 +265,14 @@ Estado.prototype = {
         for (let capa of capas) capa.ocultar();
       }
     } else if (listaContieneTecla(key, teclasDisminuirTiempoTransicionFondo)) {
-      this.tiempoTransicionFondoSeleccionado = constrain(this.tiempoTransicionFondoSeleccionado - 1, 0, 9);
+      this.tiempoTransicionFondoSeleccionado = p.constrain(this.tiempoTransicionFondoSeleccionado - 1, 0, 9);
     } else if (listaContieneTecla(key, teclasAumentarTiempoTransicionFondo)) {
-      this.tiempoTransicionFondoSeleccionado = constrain(this.tiempoTransicionFondoSeleccionado + 1, 0, 9);  
+      this.tiempoTransicionFondoSeleccionado = p.constrain(this.tiempoTransicionFondoSeleccionado + 1, 0, 9);  
     } else if (listaContieneTecla(key, teclasDisminuirTiempoBorrado)) {       
-      this.tiempoBorradoSeleccionado = constrain(this.tiempoBorradoSeleccionado - 1, 0, 9);
+      this.tiempoBorradoSeleccionado = p.constrain(this.tiempoBorradoSeleccionado - 1, 0, 9);
       this.tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
     } else if (listaContieneTecla(key, teclasAumentarTiempoBorrado)) {        
-      this.tiempoBorradoSeleccionado = constrain(this.tiempoBorradoSeleccionado + 1, 0, 9);
+      this.tiempoBorradoSeleccionado = p.constrain(this.tiempoBorradoSeleccionado + 1, 0, 9);
       this.tiempoBorradoTrazos.establecerObjetivo(tiemposBorradoTrazo[this.tiempoBorradoSeleccionado]);
     } else {    
       for (let p of pinceles) {
@@ -298,7 +305,7 @@ Estado.prototype = {
       }
 
       // Tambien borramos los trazos de los peers que ya no estan conectados
-      if (keyCode === DELETE || keyCode === BACKSPACE) {
+      if (keyCode === p.DELETE || keyCode === p.BACKSPACE) {
         for (let id of otrosEstados.keys()) {
           if (!otrosIDs.containsKey(id)) {
             if (this.todasCapasSeleccionadas) {
