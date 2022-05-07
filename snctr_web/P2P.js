@@ -29,17 +29,18 @@ function iniciarP2P(p, otroId) {
   peer.on('error', function(err) {
     sketch.print("Hubo un error", err);
   });
+
 }
 
 function mostrarID() {
-  mostrandoID = !mostrandoID;
-  if (mostrandoID) {
-    div = sketch.createDiv(miID);
-    div.position(0, 0);
-    div.size(300, 20);
-  } else {
-    sketch.removeElements();
-  }
+  // mostrandoID = !mostrandoID;
+  // if (mostrandoID) {
+  //   div = sketch.createDiv(miID);
+  //   div.position(0, 0);
+  //   div.size(300, 20);
+  // } else {
+  //   sketch.removeElements();
+  // }
 }
 
 function leerID() {

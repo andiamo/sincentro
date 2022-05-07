@@ -43,10 +43,11 @@ controlsBTN.onclick = function () {
 var sketch = function (p) {
 
   p.setup = function () {
+
     p.configurarPantallaCompleta();
     p.disableScroll();
     p.cursor(p.CROSS);
-    
+
     // https://www.codeleaks.io/get-url-parameter-javascript/
     // https://developer.mozilla.org/en-US/docs/Web/API/Location/search
     const queryString = window.location.search;
@@ -60,15 +61,19 @@ var sketch = function (p) {
     lienzo = new LienzoFondo(p);
     estado = new Estado(p);
     mensajes = new Mensajes(p);
+
     // iu = new Interface();
     // crearInterface();
+
+
+   iniciarP2P(p, otroID);
   
-    iniciarP2P(p, otroID);
-  
-    // mostrarPortada(p);    
+    // mostrarPortada(p);
   };
 
+  
   p.draw = function () {
+
     // if (mostrandoPortada()) return
 
     if (!presionInicializada) {
@@ -82,23 +87,27 @@ var sketch = function (p) {
     mensajes.mostrar();
     // mostrarInterface();
   };
+  
 
   p.mousePressed = function() {
-    if (mostrandoID) return
+    // if (mostrandoID) return
+
     estado.iniciarTrazo(estado.indiceTrazo + 1, p.mouseX, p.mouseY, presion, p.millis(), true);
-    return false;
+    // return false;
   };  
 
   p.mouseDragged = function() {
-    if (mostrandoID) return
+    // if (mostrandoID) return
+
     estado.actualizarTrazo(estado.indiceTrazo, p.mouseX, p.mouseY, presion, p.millis(), true);
-    return false;
+    // return false;
   };
   
   p.mouseReleased = function() {
-    if (mostrandoID) return
+    // if (mostrandoID) return
+
     estado.terminarTrazo(estado.indiceTrazo, modificador(p) === p.SHIFT, true);
-    return false;
+    // return false;
   };
   
   p.keyPressed = function() {
