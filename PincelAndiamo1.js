@@ -296,7 +296,7 @@ StrokeQuad.prototype.update = function(ff) {
 // quad strip
 StrokeQuad.prototype.display = function(p, alphaScale) {
   if (this.visible) {
-    for (let i = 2; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       p.fill(this.r[i], this.g[i], this.b[i], this.a[i] * alphaScale);
       p.vertex(this.x[i], this.y[i]);
     }
