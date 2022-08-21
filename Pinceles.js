@@ -3,10 +3,11 @@
 
 function cargarPinceles(p) {
   pinceles = [];
-  pinceles.push(new PincelLinea(p, 0, "LIN", ['Q', 'q']));
-  pinceles.push(new PincelCinta(p, 1, "CIN", ['W', 'w']));
-  pinceles.push(new PincelBola(p, 2, "BOL", ['E', 'e']));
-  pinceles.push(new PincelAnimado(p, 3, "ANI", ['R', 'r']));
+  pinceles.push(new PincelAndiamo1(p, 0, "AND", ['Q', 'q']));
+  pinceles.push(new PincelLinea(p, 1, "LIN", ['W', 'w']));
+  pinceles.push(new PincelCinta(p, 2, "CIN", ['E', 'e']));
+  pinceles.push(new PincelBola(p, 3, "BOL", ['R', 'r']));
+  pinceles.push(new PincelAnimado(p, 4, "ANI", ['T', 't']));
 }
 
 function distintos(ptoque, toque) {
