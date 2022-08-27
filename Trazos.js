@@ -4,6 +4,15 @@ function crearToque(x, y, p, t, primero) {
   return toque;
 }
 
+function cerrarTrazo(capa, unico) {
+  if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
+  if (estado.nuevoTrazo !== null) {
+    estado.nuevoTrazo.cerrate(unico, estado.tiempoBorradoTrazos.valor);
+    capa.trazos.push(estado.nuevoTrazo);
+    estado.registrandoTrazo = false;  
+  }
+}
+
 var Trazo = function(p = null, indice = 0, peer = "", capa = null, pincel = null, tinta = null, factorOpacidad = 0, factorEscala = 0, rep = false, t = 0) {
   this.p = p;
   console.log("CREATING TRAZO " + p);

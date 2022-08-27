@@ -47,6 +47,7 @@ var PincelAndiamo1 = function(p, indice, nombre, teclas) {
     this.Sid2Point1 = null;
 
     this.quads = [];
+    this.quadCount = [];
 
     this.initRibbons();
   }
@@ -210,19 +211,20 @@ PincelAndiamo1.prototype = {
   },
 
   pintar: function(toques, tinta, escala) {
-    if (this.quads.length < toques.length) {
-      for (let i = this.quads.length; i < toques.length; i++) {
-        this.addPointToRibbon(toques[i].x, toques[i].y, tinta, escala, i === 0);
+    if (this.quadCount.length < toques.length) {
+      for (let i = this.quadCount.length; i < toques.length; i++) {
+        this.addPointToRibbon(toques[i].x, toques[i].y, tinta, escala, toques[i].primero);
+        this.quadCount.push(this.quads.length);
       }
     }
 
-    if (0 < this.quads.length) {
+    if (0 < this.quadCount.length) {
       let p = this.p;
       let alphaScale = p.alpha(tinta) / 255;
       p.beginShape(p.QUADS);
       p.noStroke();
       p.fill(tinta);
-      for (let i = 0; i < Math.min(this.quads.length, toques.length); i++) {
+      for (let i = 0; i < this.quadCount[toques.length - 1]; i++) {
         let quad = this.quads[i];
         quad.display(p, alphaScale);
       }        

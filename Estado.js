@@ -152,7 +152,7 @@ Estado.prototype = {
       if (i === this.nuevoTrazo.indice) {
         this.nuevoTrazo.agregarUnToque(crearToque(x, y, p, t, false));
       } else {
-       this.terminarTrazo(i, false);
+       this.terminarTrazo(i, modificador(this.p) === this.p.SHIFT);
       }
     }
     if (enviar && 0 < otrosIDs.size()) {
@@ -165,11 +165,7 @@ Estado.prototype = {
       if (this.unirTrazos) {
         this.nuevoTrazo.toquePrevioEsUltimo();
       } else {
-        let capa = capas[this.capaSeleccionada];
-        if (capa.trazos.length === MAX_TRAZOS) capa.trazos.shift();
-        this.nuevoTrazo.cerrate(unico, this.tiempoBorradoTrazos.valor);
-        capa.trazos.push(this.nuevoTrazo);
-        this.registrandoTrazo = false;
+        cerrarTrazo(capas[this.capaSeleccionada], unico);
       }
     }
     if (enviar && 0 < otrosIDs.size()) {
@@ -242,7 +238,7 @@ Estado.prototype = {
     }  else if (keyCode === p.TAB) {
       this.unirTrazos = !this.unirTrazos;
       if (!this.unirTrazos) {
-        this.terminarTrazo(this.indiceTrazo, false, enviar);
+        this.terminarTrazo(this.indiceTrazo, modificador(this.p) === this.p.SHIFT, enviar);
       }
     } else if (listaContieneTecla(key, teclasSeleccionUnaCapa)) {
       this.capaSeleccionada = indiceDeTecla(key, teclasSeleccionUnaCapa);
